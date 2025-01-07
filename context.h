@@ -9,8 +9,10 @@ enum class io_type
 	receive
 };
 
-
 class context
 {
+public:
+	context();
+	~context();
 };
 

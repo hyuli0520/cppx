@@ -4,3 +4,7 @@ socket::socket()
 {
 	_sock = INVALID_SOCKET;
 }
+
+socket::~socket()
+{
+}

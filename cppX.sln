@@ -5,8 +5,6 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cppx", "cppX.vcxproj", "{A8DDF85F-3915-425B-B2C8-9FE7BB5A0453}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "..\test\test.vcxproj", "{324380DF-FE3B-4194-8605-2CD4BCF81786}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{A8DDF85F-3915-425B-B2C8-9FE7BB5A0453}.Release|x64.Build.0 = Release|x64
 		{A8DDF85F-3915-425B-B2C8-9FE7BB5A0453}.Release|x86.ActiveCfg = Release|Win32
 		{A8DDF85F-3915-425B-B2C8-9FE7BB5A0453}.Release|x86.Build.0 = Release|Win32
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Debug|x64.ActiveCfg = Debug|x64
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Debug|x64.Build.0 = Debug|x64
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Debug|x86.ActiveCfg = Debug|Win32
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Debug|x86.Build.0 = Debug|Win32
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Release|x64.ActiveCfg = Release|x64
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Release|x64.Build.0 = Release|x64
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Release|x86.ActiveCfg = Release|Win32
-		{324380DF-FE3B-4194-8605-2CD4BCF81786}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

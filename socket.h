@@ -22,7 +22,8 @@ enum class socket_type
 
 class socket
 {
-	
+	socket();
+	virtual ~socket();
 
 private:
 	SOCKET _sock;

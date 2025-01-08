@@ -21,12 +21,18 @@
     <ClInclude Include="native.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="context.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="socket.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="native.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="context.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>

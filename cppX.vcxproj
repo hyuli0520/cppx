@@ -128,10 +128,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="context.h" />
     <ClInclude Include="native.h" />
     <ClInclude Include="socket.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="context.cpp" />
     <ClCompile Include="native.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>

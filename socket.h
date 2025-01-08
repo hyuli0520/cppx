@@ -22,8 +22,12 @@ enum class socket_type
 
 class socket
 {
+public:
 	socket();
 	virtual ~socket();
+
+	void close();
+	void create(protocol pt = protocol::tcp);
 
 private:
 	SOCKET _sock;

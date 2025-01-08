@@ -9,5 +9,10 @@ using namespace std;
 
 class native
 {
+public:
+	bool init();
+
+private:
+	HANDLE _cp;
 };
 

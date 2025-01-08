@@ -29,6 +29,9 @@ public:
 	void close();
 	void create(protocol pt = protocol::tcp);
 
+	bool bind(int port, address_family af);
+	bool listen(int backlog);
+
 private:
 	SOCKET _sock;
 };

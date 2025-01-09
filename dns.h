@@ -4,6 +4,7 @@
 
 struct host_entry
 {
+	vector<class ip_address> address_list;
 	string host_name;
 };
 

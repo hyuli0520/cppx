@@ -2,7 +2,7 @@
 
 #include "native.h"
 
-class ip_address : sockaddr_in
+class ip_address : public sockaddr_in
 {
 public:
 	ip_address();

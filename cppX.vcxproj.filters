@@ -30,6 +30,9 @@
     <ClInclude Include="ip_address.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="endpoint.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="socket.cpp">
@@ -48,6 +51,9 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="ip_address.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="endpoint.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>

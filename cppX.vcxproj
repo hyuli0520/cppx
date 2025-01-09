@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="context.h" />
     <ClInclude Include="dns.h" />
+    <ClInclude Include="endpoint.h" />
     <ClInclude Include="ip_address.h" />
     <ClInclude Include="native.h" />
     <ClInclude Include="socket.h" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="context.cpp" />
     <ClCompile Include="dns.cpp" />
+    <ClCompile Include="endpoint.cpp" />
     <ClCompile Include="ip_address.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="native.cpp" />

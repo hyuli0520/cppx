@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="context.cpp" />
     <ClCompile Include="dns.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="native.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>

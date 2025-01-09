@@ -46,3 +46,14 @@ bool socket::listen(int backlog)
 
 	return false;
 }
+
+bool socket::accept()
+{
+	sockaddr_in clientAddr;
+	int addrLen = sizeof(sockaddr_in);
+
+	if (::accept(_sock, (sockaddr*)&clientAddr, &addrLen) != INVALID_SOCKET)
+		return true;
+
+	return false;
+}

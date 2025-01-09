@@ -32,6 +32,8 @@ public:
 	bool bind(int port, address_family af);
 	bool listen(int backlog);
 
+	bool accept();
+
 private:
 	SOCKET _sock;
 };

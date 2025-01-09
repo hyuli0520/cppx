@@ -7,4 +7,6 @@ bool native::init()
         return false;
 
     _cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+
+    return true;
 }

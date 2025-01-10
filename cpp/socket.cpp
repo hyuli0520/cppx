@@ -26,14 +26,12 @@ void socket::create(protocol pt)
 	_sock = ::socket(PF_INET, static_cast<int>(type), static_cast<int>(pt));
 }
 
-bool socket::bind(int port, address_family af)
+bool socket::bind(endpoint ep)
 {
-	sockaddr_in addr_in;
-	addr_in.sin_family = static_cast<u_short>(af);
-	addr_in.sin_port = port;
-	addr_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	_endpoint = make_shared<endpoint>(ep);
+	ip_address ipAddr = _endpoint->get_address();
 
-	if(::bind(_sock, (sockaddr*)&addr_in, sizeof(sockaddr_in)) != SOCKET_ERROR)
+	if(::bind(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)) != SOCKET_ERROR)
 		return true;
 
 	return false;

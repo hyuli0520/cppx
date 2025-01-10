@@ -71,6 +71,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath);$(ProjectDir)/h</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(IncludePath);$(ProjectDir)/h</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -128,21 +134,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="context.h" />
-    <ClInclude Include="dns.h" />
-    <ClInclude Include="endpoint.h" />
-    <ClInclude Include="ip_address.h" />
-    <ClInclude Include="native.h" />
-    <ClInclude Include="socket.h" />
+    <ClCompile Include="cpp\context.cpp" />
+    <ClCompile Include="cpp\dns.cpp" />
+    <ClCompile Include="cpp\endpoint.cpp" />
+    <ClCompile Include="cpp\ip_address.cpp" />
+    <ClCompile Include="cpp\native.cpp" />
+    <ClCompile Include="cpp\socket.cpp" />
+    <ClCompile Include="test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="context.cpp" />
-    <ClCompile Include="dns.cpp" />
-    <ClCompile Include="endpoint.cpp" />
-    <ClCompile Include="ip_address.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="native.cpp" />
-    <ClCompile Include="socket.cpp" />
+    <ClInclude Include="h\context.h" />
+    <ClInclude Include="h\dns.h" />
+    <ClInclude Include="h\endpoint.h" />
+    <ClInclude Include="h\ip_address.h" />
+    <ClInclude Include="h\native.h" />
+    <ClInclude Include="h\socket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

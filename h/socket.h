@@ -1,6 +1,7 @@
 #pragma once
 
 #include "native.h"
+#include "endpoint.h"
 
 enum class protocol
 {
@@ -29,12 +30,14 @@ public:
 	void close();
 	void create(protocol pt = protocol::tcp);
 
-	bool bind(int port, address_family af);
+	bool bind(endpoint ep);
 	bool listen(int backlog);
 
 	bool accept();
 
 private:
+	shared_ptr<endpoint> _endpoint;
+
 	SOCKET _sock;
 };
 

@@ -3,44 +3,46 @@
 #include "native.h"
 #include "endpoint.h"
 
-enum class protocol
+namespace cppx
 {
-	tcp = IPPROTO_TCP,
-	udp = IPPROTO_UDP
-};
+	enum class protocol
+	{
+		tcp = IPPROTO_TCP,
+		udp = IPPROTO_UDP
+	};
 
-enum class address_family
-{
-	ipv4 = AF_INET,
-	ipv6 = AF_INET6
-};
+	enum class address_family
+	{
+		ipv4 = AF_INET,
+		ipv6 = AF_INET6
+	};
 
-enum class socket_type
-{
-	stream = SOCK_STREAM,
-	dgram = SOCK_DGRAM
-};
+	enum class socket_type
+	{
+		stream = SOCK_STREAM,
+		dgram = SOCK_DGRAM
+	};
 
-class socket
-{
-public:
-	socket();
-	virtual ~socket();
+	class socket
+	{
+	public:
+		socket();
+		virtual ~socket();
 
-	SOCKET get_handle();
-	void set_handle(SOCKET sock);
+		SOCKET get_handle();
+		void set_handle(SOCKET sock);
 
-	void close();
-	void create(protocol pt = protocol::tcp);
+		void close();
+		void create(protocol pt = protocol::tcp);
 
-	bool bind(endpoint ep);
-	bool listen(int backlog);
+		bool bind(endpoint ep);
+		bool listen(int backlog);
 
-	bool accept();
+		bool accept();
 
-private:
-	shared_ptr<endpoint> _endpoint;
+	private:
+		shared_ptr<endpoint> _endpoint;
 
-	SOCKET _sock;
-};
-
+		SOCKET _sock;
+	};
+}

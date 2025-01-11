@@ -1,5 +1,7 @@
 #include "socket.h"
 
+using namespace cppx;
+
 socket::socket()
 {
 	_sock = INVALID_SOCKET;

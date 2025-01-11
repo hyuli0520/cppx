@@ -12,7 +12,7 @@ enum class io_type
 	receive
 };
 
-class context
+class context : OVERLAPPED
 {
 public:
 	context();

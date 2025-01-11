@@ -2,16 +2,18 @@
 
 #include "native.h"
 
-struct host_entry
+namespace cppx
 {
-	vector<class ip_address> address_list;
-	string host_name;
-};
+	struct host_entry
+	{
+		vector<class ip_address> address_list;
+		string host_name;
+	};
 
-class dns
-{
-public:
-	static string get_host_name();
-	static host_entry get_host_entry(const string &host);
-};
-
+	class dns
+	{
+	public:
+		static string get_host_name();
+		static host_entry get_host_entry(const string& host);
+	};
+}

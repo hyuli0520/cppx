@@ -2,25 +2,27 @@
 
 #include "native.h"
 
-enum class io_type
+namespace cppx
 {
-	none,
-	accept,
-	connect,
-	disconnect,
-	send,
-	receive
-};
+	enum class io_type
+	{
+		none,
+		accept,
+		connect,
+		disconnect,
+		send,
+		receive
+	};
 
-class context : OVERLAPPED
-{
-public:
-	context();
-	~context();
+	class context : OVERLAPPED
+	{
+	public:
+		context();
+		~context();
 
-public:
-	vector<char> _buffer;
+	public:
+		vector<char> _buffer;
 
-	io_type _io_type;
-};
-
+		io_type _io_type;
+	};
+}

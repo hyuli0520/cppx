@@ -1,5 +1,7 @@
 #include "ip_address.h"
 
+using namespace cppx;
+
 ip_address::ip_address() : sockaddr_in()
 {
 	::memset(this, 0, sizeof(sockaddr_in));

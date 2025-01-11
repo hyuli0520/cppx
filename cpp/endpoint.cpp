@@ -1,5 +1,7 @@
 #include "endpoint.h"
 
+using namespace cppx;
+
 endpoint::endpoint(ip_address address, u_short port)
 {
 	_address = address;

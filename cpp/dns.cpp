@@ -1,5 +1,7 @@
 #include "dns.h"
 
+using namespace cppx;
+
 string dns::get_host_name()
 {
 	char buf[128] = "";

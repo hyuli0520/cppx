@@ -9,6 +9,16 @@ socket::~socket()
 {
 }
 
+SOCKET socket::get_handle()
+{
+	return _sock;
+}
+
+void socket::set_handle(SOCKET sock)
+{
+	_sock = sock;
+}
+
 void socket::close()
 {
 	if (_sock != INVALID_SOCKET)

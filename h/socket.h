@@ -27,6 +27,9 @@ public:
 	socket();
 	virtual ~socket();
 
+	SOCKET get_handle();
+	void set_handle(SOCKET sock);
+
 	void close();
 	void create(protocol pt = protocol::tcp);
 

@@ -12,6 +12,7 @@ using namespace std;
 namespace cppx
 {
 	class socket;
+	class context;
 
 	class native
 	{
@@ -19,6 +20,7 @@ namespace cppx
 		bool init();
 
 		bool observe(socket* sock);
+		void gqcs();
 
 	private:
 		HANDLE _cp;

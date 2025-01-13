@@ -21,6 +21,7 @@ namespace cppx
 		~context();
 
 	public:
+		shared_ptr<socket> _accept_socket;
 		vector<char> _buffer;
 
 		io_type _io_type;

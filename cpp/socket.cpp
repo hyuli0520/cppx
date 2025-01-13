@@ -43,7 +43,7 @@ bool socket::bind(endpoint ep)
 	_endpoint = make_shared<endpoint>(ep);
 	ip_address ipAddr = _endpoint->get_address();
 
-	if(::bind(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)) != SOCKET_ERROR)
+	if (::bind(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)) != SOCKET_ERROR)
 		return true;
 
 	return false;
@@ -57,13 +57,22 @@ bool socket::listen(int backlog)
 	return false;
 }
 
-bool socket::accept()
+bool socket::accept(context* context)
 {
-	sockaddr_in clientAddr;
-	int addrLen = sizeof(sockaddr_in);
+	if (!context)
+		return;
 
-	if (::accept(_sock, (sockaddr*)&clientAddr, &addrLen) != INVALID_SOCKET)
-		return true;
+	context->_io_type = io_type::accept;
+	context->_accept_socket = make_shared<socket>(protocol::tcp);
 
-	return false;
+	DWORD dwBytes;
+	char buf[1024];
+
+	if (!native::accept(_sock, context->_accept_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(&context)))
+	{
+		const auto error = WSAGetLastError();
+		return error == WSA_IO_PENDING;
+	}
+
+	return true;
 }

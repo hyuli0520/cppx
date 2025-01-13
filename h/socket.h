@@ -2,6 +2,7 @@
 
 #include "native.h"
 #include "endpoint.h"
+#include "context.h"
 
 namespace cppx
 {
@@ -38,7 +39,7 @@ namespace cppx
 		bool bind(endpoint ep);
 		bool listen(int backlog);
 
-		bool accept();
+		bool accept(context* context);
 
 	private:
 		shared_ptr<endpoint> _endpoint;

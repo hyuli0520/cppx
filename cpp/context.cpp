@@ -2,7 +2,7 @@
 
 using namespace cppx;
 
-context::context()
+context::context() : OVERLAPPED()
 {
 	_io_type = io_type::none;
 }

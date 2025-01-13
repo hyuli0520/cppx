@@ -24,13 +24,13 @@ namespace cppx
 
 
 	public:
-		bool init();
-		bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
+		static bool init();
+		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
 
-		bool observe(socket* sock);
-		void gqcs();
+		static bool observe(socket* sock);
+		static void gqcs();
 
 	private:
-		HANDLE _cp;
+		static HANDLE _cp;
 	};
 }

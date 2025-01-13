@@ -4,9 +4,15 @@ using namespace cppx;
 
 context::context() : OVERLAPPED()
 {
-	_io_type = io_type::none;
+	init();
 }
 
 context::~context()
 {
+}
+
+bool cppx::context::init()
+{
+	::memset(this, 0, sizeof(OVERLAPPED));
+	_io_type = io_type::none;
 }

@@ -20,6 +20,8 @@ namespace cppx
 		context();
 		~context();
 
+		bool init();
+
 	public:
 		shared_ptr<socket> _accept_socket;
 		vector<char> _buffer;

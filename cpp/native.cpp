@@ -37,7 +37,14 @@ void cppx::native::gqcs()
 		else
 		{
 			auto error = WSAGetLastError();
-			break;
+			switch (error)
+			{
+			case WAIT_TIMEOUT:
+				return;
+			default:
+
+				break;
+			}
 		}
 	}
 	

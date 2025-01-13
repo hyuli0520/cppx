@@ -4,15 +4,33 @@
 
 using namespace cppx;
 
+LPFN_ACCEPTEX native::accept = nullptr;
+LPFN_CONNECTEX native::connect = nullptr;
+LPFN_DISCONNECTEX native::disconnect = nullptr;
+
 bool native::init()
 {
 	WSADATA wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		return false;
 
+	socket dummy;
+	dummy.create(protocol::tcp);
+	if (!bind_windows_function(dummy.get_handle(), WSAID_ACCEPTEX, reinterpret_cast<LPVOID*>(&accept)))
+		return false;
+	if (!bind_windows_function(dummy.get_handle(), WSAID_CONNECTEX, reinterpret_cast<LPVOID*>(&connect)))
+		return false;
+	if (!bind_windows_function(dummy.get_handle(), WSAID_DISCONNECTEX, reinterpret_cast<LPVOID*>(&disconnect)))
+		return false;
+
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 
 	return true;
+}
+
+bool cppx::native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
+{
+	return false;
 }
 
 bool native::observe(socket* sock)

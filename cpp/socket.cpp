@@ -62,6 +62,7 @@ bool socket::accept(context* context)
 	if (!context)
 		return;
 
+	context->init();
 	context->_io_type = io_type::accept;
 	context->_accept_socket = make_shared<socket>(protocol::tcp);
 

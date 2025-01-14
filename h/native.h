@@ -29,6 +29,7 @@ namespace cppx
 
 		static bool observe(socket* sock);
 		static void gqcs();
+		static bool process(context* context);
 
 	private:
 		static HANDLE _cp;

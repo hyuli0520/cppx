@@ -12,8 +12,11 @@ namespace cppx
 		endpoint(ip_address address, u_short port);
 
 		ip_address get_address() const;
+		void set_address(ip_address address);
 		u_short get_port();
 		void set_port(u_short port);
+
+		static endpoint set(sockaddr_in addr);
 
 	private:
 		ip_address _address;

@@ -50,6 +50,7 @@ void cppx::native::gqcs()
 		auto result = ::GetQueuedCompletionStatus(_cp, &numofBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&context), INFINITE);
 		if (result)
 		{
+			process(context);
 			break;
 		}
 		else
@@ -60,10 +61,38 @@ void cppx::native::gqcs()
 			case WAIT_TIMEOUT:
 				return;
 			default:
-
+				process(context);
 				break;
 			}
 		}
 	}
-	
+
+}
+
+bool cppx::native::process(context* context)
+{
+	switch (context->_io_type)
+	{
+	case io_type::accept:
+	{
+		sockaddr_in addr;
+		int len = sizeof(sockaddr_in);
+		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+			return false;
+		auto endpoint = endpoint::set(addr);
+		break;
+	}
+	case io_type::connect:
+		break;
+	case io_type::disconnect:
+		break;
+	case io_type::receive:
+		break;
+	case io_type::send:
+		break;
+	default:
+		return false;
+	}
+
+	return true;
 }

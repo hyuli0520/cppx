@@ -1,4 +1,5 @@
 #include "dns.h"
+#include "ip_address.h"
 
 using namespace cppx;
 

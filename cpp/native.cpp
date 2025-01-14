@@ -66,7 +66,7 @@ void cppx::native::gqcs()
 			}
 		}
 	}
-	
+
 }
 
 bool cppx::native::process(context* context)
@@ -74,16 +74,22 @@ bool cppx::native::process(context* context)
 	switch (context->_io_type)
 	{
 	case io_type::accept:
+	{
 		sockaddr_in addr;
 		int len = sizeof(sockaddr_in);
 		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 			return false;
 		auto endpoint = endpoint::set(addr);
 		break;
+	}
 	case io_type::connect:
+		break;
 	case io_type::disconnect:
+		break;
 	case io_type::receive:
+		break;
 	case io_type::send:
+		break;
 	default:
 		return false;
 	}

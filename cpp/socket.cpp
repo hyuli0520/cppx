@@ -60,7 +60,7 @@ bool socket::listen(int backlog)
 bool socket::accept(context* context)
 {
 	if (!context)
-		return;
+		return false;
 
 	context->init();
 	context->_io_type = io_type::accept;

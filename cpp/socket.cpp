@@ -7,6 +7,12 @@ socket::socket()
 	_sock = INVALID_SOCKET;
 }
 
+cppx::socket::socket(const socket& sock)
+{
+	_sock = sock._sock;
+	_endpoint = sock._endpoint;
+}
+
 socket::~socket()
 {
 }

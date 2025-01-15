@@ -28,6 +28,7 @@ namespace cppx
 	{
 	public:
 		socket();
+		socket(const socket& sock);
 		virtual ~socket();
 
 		SOCKET get_handle();

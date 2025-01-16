@@ -13,6 +13,11 @@ cppx::socket::socket(const socket& sock)
 	_endpoint = sock._endpoint;
 }
 
+cppx::socket::socket(protocol pt)
+{
+	create(pt);
+}
+
 socket::~socket()
 {
 }

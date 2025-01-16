@@ -8,14 +8,15 @@ LPFN_ACCEPTEX native::accept = nullptr;
 LPFN_CONNECTEX native::connect = nullptr;
 LPFN_DISCONNECTEX native::disconnect = nullptr;
 
+HANDLE native::_cp = nullptr;
+
 bool native::init()
 {
 	WSADATA wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		return false;
 
-	socket dummy;
-	dummy.create(protocol::tcp);
+	socket dummy(protocol::tcp);
 	if (!bind_windows_function(dummy.get_handle(), WSAID_ACCEPTEX, reinterpret_cast<LPVOID*>(&accept)))
 		return false;
 	if (!bind_windows_function(dummy.get_handle(), WSAID_CONNECTEX, reinterpret_cast<LPVOID*>(&connect)))

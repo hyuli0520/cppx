@@ -9,5 +9,6 @@ namespace cppx
 	public:
 		ip_address();
 		ip_address(const sockaddr_in& addr_in);
+		ip_address(const char* ip);
 	};
 }

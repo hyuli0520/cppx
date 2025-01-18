@@ -25,7 +25,7 @@ namespace cppx
 
 
 	public:
-		static bool init();
+		static bool init(int num);
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
 
 		static void run(int num);

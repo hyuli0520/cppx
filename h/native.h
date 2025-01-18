@@ -28,6 +28,8 @@ namespace cppx
 		static bool init();
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
 
+		static void run(int num);
+
 		static bool observe(socket* sock);
 		static void gqcs();
 		static bool process(context* context);

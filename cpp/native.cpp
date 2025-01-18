@@ -34,6 +34,14 @@ bool cppx::native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 	return false;
 }
 
+void native::run(int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		new thread(&gqcs);
+	}
+}
+
 bool native::observe(socket* sock)
 {
 	auto result = ::CreateIoCompletionPort(reinterpret_cast<HANDLE>(sock->get_handle()), _cp, 0, 0);

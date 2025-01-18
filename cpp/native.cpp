@@ -10,7 +10,7 @@ LPFN_DISCONNECTEX native::disconnect = nullptr;
 
 HANDLE native::_cp = nullptr;
 
-bool native::init()
+bool native::init(int num)
 {
 	WSADATA wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -25,6 +25,8 @@ bool native::init()
 		return false;
 
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+
+	run(num);
 
 	return true;
 }

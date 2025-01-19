@@ -20,9 +20,10 @@ cppx::socket::socket(protocol pt)
 
 socket::~socket()
 {
+	close();
 }
 
-SOCKET socket::get_handle()
+SOCKET socket::get_handle() const
 {
 	return _sock;
 }
@@ -60,7 +61,7 @@ bool socket::bind(endpoint ep)
 	return false;
 }
 
-bool socket::listen(int backlog)
+bool socket::listen(int backlog) const
 {
 	if (::listen(_sock, backlog) != SOCKET_ERROR)
 		return true;

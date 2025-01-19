@@ -20,6 +20,7 @@ cppx::socket::socket(protocol pt)
 
 socket::~socket()
 {
+	close();
 }
 
 SOCKET socket::get_handle()

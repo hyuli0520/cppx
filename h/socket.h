@@ -32,14 +32,14 @@ namespace cppx
 		socket(protocol pt);
 		virtual ~socket();
 
-		SOCKET get_handle();
+		SOCKET get_handle() const;
 		void set_handle(SOCKET sock);
 
 		void close();
 		void create(protocol pt = protocol::tcp);
 
 		bool bind(endpoint ep);
-		bool listen(int backlog);
+		bool listen(int backlog) const;
 
 		bool accept(context* context);
 

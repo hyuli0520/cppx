@@ -33,7 +33,8 @@ bool native::init(int num)
 
 bool cppx::native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 {
-	return false;
+	DWORD bytes = 0;
+	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(fn), &bytes, NULL, NULL);
 }
 
 void native::run(int num)

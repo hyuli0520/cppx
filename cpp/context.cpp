@@ -11,7 +11,7 @@ context::~context()
 {
 }
 
-void cppx::context::init()
+void context::init()
 {
 	_accept_socket.reset();
 	_buffer.clear();

@@ -43,6 +43,20 @@ namespace cppx
 
 		bool accept(context* context);
 
+		bool set_linger(short onoff, short linger);
+		bool set_reuse_address(bool flag);
+		bool set_recv_buffer(int size);
+		bool set_send_buffer(int size);
+		bool set_tcp_nodelay(bool flag);
+		bool set_update_accept(socket listen_sock);
+
+
+		template<typename t>
+		bool set_option(int level, int opt_name, t opt_val)
+		{
+			return SOCKET_ERROR != setsockopt(_sock, level, opt_name, reinterpret_cast<char*>(&opt_val), sizeof(t));
+		};
+
 	private:
 		shared_ptr<endpoint> _endpoint;
 

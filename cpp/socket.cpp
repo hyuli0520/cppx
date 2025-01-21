@@ -89,3 +89,36 @@ bool socket::accept(context* context)
 
 	return true;
 }
+
+bool socket::set_linger(short onoff, short linger)
+{
+	LINGER option;
+	option.l_onoff = onoff;
+	option.l_linger = linger;
+	return set_option(SOL_SOCKET, SO_LINGER, option);
+}
+
+bool socket::set_reuse_address(bool flag)
+{
+	return set_option(SOL_SOCKET, SO_REUSEADDR, flag);
+}
+
+bool cppx::socket::set_recv_buffer(int size)
+{
+	return set_option(SOL_SOCKET, SO_RCVBUF, size);
+}
+
+bool cppx::socket::set_send_buffer(int size)
+{
+	return set_option(SOL_SOCKET, SO_SNDBUF, size);
+}
+
+bool cppx::socket::set_tcp_nodelay(bool flag)
+{
+	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
+}
+
+bool cppx::socket::set_update_accept(socket listen_sock)
+{
+	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);
+}

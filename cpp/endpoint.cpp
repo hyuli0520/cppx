@@ -14,7 +14,7 @@ ip_address endpoint::get_address() const
 	return _address;
 }
 
-void cppx::endpoint::set_address(ip_address address)
+void endpoint::set_address(ip_address address)
 {
 	_address = address;
 }
@@ -29,7 +29,7 @@ void endpoint::set_port(u_short port)
 	_address.sin_port = htons(port);
 }
 
-endpoint cppx::endpoint::set(sockaddr_in addr)
+endpoint endpoint::set(sockaddr_in addr)
 {
 	endpoint ep;
 	ep.set_address(ip_address(addr));

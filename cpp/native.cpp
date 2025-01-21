@@ -31,7 +31,7 @@ bool native::init(int num)
 	return true;
 }
 
-bool cppx::native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
+bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 {
 	DWORD bytes = 0;
 	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(fn), &bytes, NULL, NULL);
@@ -51,7 +51,7 @@ bool native::observe(socket* sock)
 	return result != nullptr;
 }
 
-void cppx::native::gqcs()
+void native::gqcs()
 {
 	context* context = nullptr;
 	ULONG_PTR key = 0;
@@ -81,7 +81,7 @@ void cppx::native::gqcs()
 
 }
 
-bool cppx::native::process(context* context)
+bool native::process(context* context)
 {
 	switch (context->_io_type)
 	{

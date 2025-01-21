@@ -7,13 +7,13 @@ socket::socket()
 	_sock = INVALID_SOCKET;
 }
 
-cppx::socket::socket(const socket& sock)
+socket::socket(const socket& sock)
 {
 	_sock = sock._sock;
 	_endpoint = sock._endpoint;
 }
 
-cppx::socket::socket(protocol pt)
+socket::socket(protocol pt)
 {
 	create(pt);
 }

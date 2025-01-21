@@ -15,7 +15,7 @@ ip_address::ip_address(const sockaddr_in& addr_in) : sockaddr_in()
 	sin_port = htons(addr_in.sin_port);
 }
 
-cppx::ip_address::ip_address(const char* ip)
+ip_address::ip_address(const char* ip)
 {
 	inet_pton(AF_INET, ip, &this->sin_addr);
 	this->sin_family = AF_INET;

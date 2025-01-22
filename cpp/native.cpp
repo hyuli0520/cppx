@@ -87,7 +87,7 @@ bool native::process(context* context)
 	{
 	case io_type::accept:
 	{
-		socket listen_socket(protocol::tcp);
+		auto listen_socket = reinterpret_cast<socket*>(&context->_socket);
 		if (!observe(context->_socket.get()))
 			return false;
 

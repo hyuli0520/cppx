@@ -99,6 +99,7 @@ bool native::process(context* context)
 		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 			return false;
 		auto endpoint = endpoint::set(addr);
+		context->_accept_socket->set_endpoint(endpoint);
 		break;
 	}
 	case io_type::connect:

@@ -33,6 +33,11 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
+void cppx::socket::set_endpoint(endpoint ep)
+{
+	_endpoint = make_shared<endpoint>(ep);
+}
+
 void socket::close()
 {
 	if (_sock != INVALID_SOCKET)

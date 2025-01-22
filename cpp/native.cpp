@@ -26,7 +26,7 @@ bool native::init(int num)
 
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 
-	run(num);
+	start_io(num);
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(fn), &bytes, NULL, NULL);
 }
 
-void native::run(int num)
+void native::start_io(int num)
 {
 	for (int i = 0; i < num; i++)
 	{

@@ -28,7 +28,7 @@ namespace cppx
 		static bool init(int num);
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
 
-		static void run(int num);
+		static void start_io(int num);
 
 		static bool observe(socket* sock);
 		static void gqcs();

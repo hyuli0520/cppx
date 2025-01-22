@@ -88,18 +88,18 @@ bool native::process(context* context)
 	case io_type::accept:
 	{
 		socket listen_socket(protocol::tcp);
-		if (!observe(context->_accept_socket.get()))
+		if (!observe(context->_socket.get()))
 			return false;
 
-		if(!context->_accept_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket.get_handle()))
+		if(!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
 			return false;
 
 		sockaddr_in addr;
 		int len = sizeof(sockaddr_in);
-		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+		if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 			return false;
 		auto endpoint = endpoint::set(addr);
-		context->_accept_socket->set_endpoint(endpoint);
+		context->_socket->set_endpoint(endpoint);
 		break;
 	}
 	case io_type::connect:

@@ -15,46 +15,46 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="socket.h">
+    <ClInclude Include="h\context.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="native.h">
+    <ClInclude Include="h\dns.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="context.h">
+    <ClInclude Include="h\endpoint.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="dns.h">
+    <ClInclude Include="h\ip_address.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="ip_address.h">
+    <ClInclude Include="h\native.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="endpoint.h">
+    <ClInclude Include="h\socket.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="socket.cpp">
+    <ClCompile Include="cpp\context.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="native.cpp">
+    <ClCompile Include="cpp\dns.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="context.cpp">
+    <ClCompile Include="cpp\endpoint.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="dns.cpp">
+    <ClCompile Include="cpp\ip_address.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="cpp\native.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\socket.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="test\main.cpp">
       <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="ip_address.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="endpoint.cpp">
-      <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

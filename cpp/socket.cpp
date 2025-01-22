@@ -63,10 +63,7 @@ bool socket::bind(endpoint ep)
 
 bool socket::listen(int backlog) const
 {
-	if (::listen(_sock, backlog) != SOCKET_ERROR)
-		return true;
-
-	return false;
+	return SOCKET_ERROR != ::listen(_sock, backlog);
 }
 
 bool socket::accept(context* context)

@@ -23,7 +23,7 @@ namespace cppx
 		void init();
 
 	public:
-		shared_ptr<socket> _accept_socket;
+		shared_ptr<socket> _socket;
 		vector<char> _buffer;
 
 		io_type _io_type;

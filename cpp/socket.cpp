@@ -33,6 +33,11 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
+void cppx::socket::set_endpoint(endpoint ep)
+{
+	_endpoint = make_shared<endpoint>(ep);
+}
+
 void socket::close()
 {
 	if (_sock != INVALID_SOCKET)
@@ -63,10 +68,7 @@ bool socket::bind(endpoint ep)
 
 bool socket::listen(int backlog) const
 {
-	if (::listen(_sock, backlog) != SOCKET_ERROR)
-		return true;
-
-	return false;
+	return SOCKET_ERROR != ::listen(_sock, backlog);
 }
 
 bool socket::accept(context* context)
@@ -76,12 +78,12 @@ bool socket::accept(context* context)
 
 	context->init();
 	context->_io_type = io_type::accept;
-	context->_accept_socket = make_shared<socket>(protocol::tcp);
+	context->_socket = make_shared<socket>(protocol::tcp);
 
 	DWORD dwBytes;
 	char buf[1024];
 
-	if (!native::accept(_sock, context->_accept_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(&context)))
+	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(&context)))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;

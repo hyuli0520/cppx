@@ -26,7 +26,7 @@ bool native::init(int num)
 
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 
-	run(num);
+	start_io(num);
 
 	return true;
 }
@@ -37,7 +37,7 @@ bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(fn), &bytes, NULL, NULL);
 }
 
-void native::run(int num)
+void native::start_io(int num)
 {
 	for (int i = 0; i < num; i++)
 	{
@@ -87,11 +87,19 @@ bool native::process(context* context)
 	{
 	case io_type::accept:
 	{
+		auto listen_socket = reinterpret_cast<socket*>(&context->_socket);
+		if (!observe(context->_socket.get()))
+			return false;
+
+		if(!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
+			return false;
+
 		sockaddr_in addr;
 		int len = sizeof(sockaddr_in);
-		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+		if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 			return false;
 		auto endpoint = endpoint::set(addr);
+		context->_socket->set_endpoint(endpoint);
 		break;
 	}
 	case io_type::connect:

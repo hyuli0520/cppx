@@ -87,6 +87,13 @@ bool native::process(context* context)
 	{
 	case io_type::accept:
 	{
+		socket listen_socket(protocol::tcp);
+		if (!observe(context->_accept_socket.get()))
+			return false;
+
+		if(!context->_accept_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket.get_handle()))
+			return false;
+
 		sockaddr_in addr;
 		int len = sizeof(sockaddr_in);
 		if (::getpeername(context->_accept_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)

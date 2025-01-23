@@ -29,7 +29,7 @@ void endpoint::set_port(u_short port)
 	_address.sin_port = htons(port);
 }
 
-endpoint endpoint::set(sockaddr_in addr)
+endpoint endpoint::place(sockaddr_in addr)
 {
 	endpoint ep;
 	ep.set_address(ip_address(addr));

@@ -16,7 +16,7 @@ namespace cppx
 		u_short get_port();
 		void set_port(u_short port);
 
-		static endpoint set(sockaddr_in addr);
+		static endpoint place(sockaddr_in addr);
 
 	private:
 		ip_address _address;

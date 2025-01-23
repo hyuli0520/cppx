@@ -98,7 +98,7 @@ bool native::process(context* context)
 		int len = sizeof(sockaddr_in);
 		if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 			return false;
-		auto endpoint = endpoint::set(addr);
+		auto endpoint = endpoint::place(addr);
 		context->_socket->set_endpoint(endpoint);
 		break;
 	}

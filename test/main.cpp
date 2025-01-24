@@ -12,5 +12,10 @@ int main()
 	cppx::socket sock(cppx::protocol::tcp);
 	if (!sock.not_invalid())
 		return 0;
+	if (!sock.bind(endpoint(ip_address::any, 7777)))
+		return 0;
+	if (!sock.listen())
+		return 0;
+
 	return 0;
 }

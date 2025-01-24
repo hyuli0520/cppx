@@ -32,6 +32,7 @@ namespace cppx
 		socket(protocol pt);
 		virtual ~socket();
 
+		bool not_invalid();
 		SOCKET get_handle() const;
 		void set_handle(SOCKET sock);
 
@@ -41,8 +42,9 @@ namespace cppx
 		void create(protocol pt = protocol::tcp);
 
 		bool bind(endpoint ep);
-		bool listen(int backlog) const;
+		bool listen(int backlog = SOMAXCONN) const;
 
+		socket accept() const;
 		bool accept(context* context);
 		bool connect(context* context);
 

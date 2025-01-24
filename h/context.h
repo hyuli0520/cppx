@@ -1,6 +1,7 @@
 #pragma once
 
 #include "native.h"
+#include "endpoint.h"
 
 namespace cppx
 {

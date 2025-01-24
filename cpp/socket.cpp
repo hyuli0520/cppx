@@ -71,6 +71,14 @@ bool socket::listen(int backlog) const
 	return SOCKET_ERROR != ::listen(_sock, backlog);
 }
 
+cppx::socket socket::accept() const
+{
+	socket client;
+	client.set_handle(::accept(_sock, nullptr, nullptr));
+
+	return client;
+}
+
 bool socket::accept(context* context)
 {
 	if (!context)

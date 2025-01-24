@@ -43,6 +43,7 @@ namespace cppx
 		bool bind(endpoint ep);
 		bool listen(int backlog) const;
 
+		socket accept() const;
 		bool accept(context* context);
 		bool connect(context* context);
 

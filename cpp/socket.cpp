@@ -92,6 +92,30 @@ bool socket::accept(context* context)
 	return true;
 }
 
+bool socket::connect(context* context)
+{
+	if (!context)
+		return false;
+
+	context->init();
+	context->_io_type = io_type::connect;
+	_endpoint = context->endpoint;
+
+	if (!bind(endpoint(ip_address::any, 7777)))
+		return false;
+
+	DWORD dwBytes;
+	ip_address ipAddr = context->endpoint->get_address();
+
+	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
+	{
+		const auto error = WSAGetLastError();
+		return error == WSA_IO_PENDING;
+	}
+
+	return true;
+}
+
 bool socket::set_linger(short onoff, short linger)
 {
 	LINGER option;

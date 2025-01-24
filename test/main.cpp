@@ -17,5 +17,9 @@ int main()
 	if (!sock.listen())
 		return 0;
 
-	return 0;
+	while (true)
+	{
+		auto client = sock.accept();
+		cout << "connected" << endl;
+	}
 }

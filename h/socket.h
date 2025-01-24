@@ -32,6 +32,7 @@ namespace cppx
 		socket(protocol pt);
 		virtual ~socket();
 
+		bool not_invalid();
 		SOCKET get_handle() const;
 		void set_handle(SOCKET sock);
 

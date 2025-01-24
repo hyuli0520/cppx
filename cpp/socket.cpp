@@ -23,6 +23,11 @@ socket::~socket()
 	close();
 }
 
+bool socket::not_invalid()
+{
+	return INVALID_SOCKET != _sock;
+}
+
 SOCKET socket::get_handle() const
 {
 	return _sock;

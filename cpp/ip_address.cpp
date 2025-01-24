@@ -2,6 +2,8 @@
 
 using namespace cppx;
 
+ip_address ip_address::any = change(INADDR_ANY);
+
 ip_address::ip_address() : sockaddr_in()
 {
 	::memset(this, 0, sizeof(sockaddr_in));
@@ -19,4 +21,12 @@ ip_address::ip_address(const char* ip)
 {
 	inet_pton(AF_INET, ip, &this->sin_addr);
 	this->sin_family = AF_INET;
+}
+
+ip_address ip_address::change(int ip)
+{
+	ip_address addr;
+	::memset(&addr, 0, sizeof(sockaddr_in));
+	addr.sin_addr.s_addr = htonl(ip);
+	return addr;
 }

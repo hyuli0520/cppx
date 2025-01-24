@@ -91,7 +91,7 @@ bool native::process(context* context)
 		if (!observe(context->_socket.get()))
 			return false;
 
-		if(!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
+		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
 			return false;
 
 		sockaddr_in addr;
@@ -100,10 +100,14 @@ bool native::process(context* context)
 			return false;
 		auto endpoint = endpoint::place(addr);
 		context->_socket->set_endpoint(endpoint);
-		break;
 	}
+	break;
 	case io_type::connect:
-		break;
+	{
+		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, nullptr))
+			return false;
+	}
+	break;
 	case io_type::disconnect:
 		break;
 	case io_type::receive:

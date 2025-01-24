@@ -44,6 +44,7 @@ namespace cppx
 		bool listen(int backlog) const;
 
 		bool accept(context* context);
+		bool connect(context* context);
 
 		bool set_linger(short onoff, short linger);
 		bool set_reuse_address(bool flag);

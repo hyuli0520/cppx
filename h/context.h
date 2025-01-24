@@ -23,6 +23,9 @@ namespace cppx
 		void init();
 
 	public:
+		shared_ptr<endpoint> endpoint;
+
+	public:
 		shared_ptr<socket> _socket;
 		vector<char> _buffer;
 

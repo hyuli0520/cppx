@@ -42,7 +42,7 @@ namespace cppx
 		void create(protocol pt = protocol::tcp);
 
 		bool bind(endpoint ep);
-		bool listen(int backlog) const;
+		bool listen(int backlog = SOMAXCONN) const;
 
 		socket accept() const;
 		bool accept(context* context);

@@ -48,6 +48,7 @@ namespace cppx
 		bool accept(context* context);
 		bool connect(context* context);
 		bool send(context* context);
+		bool recv(context* context);
 
 		bool set_linger(short onoff, short linger);
 		bool set_reuse_address(bool flag);

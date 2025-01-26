@@ -138,11 +138,34 @@ bool socket::send(context* context)
 	context->_io_type = io_type::send;
 
 	WSABUF wsaBuf;
-	wsaBuf.len = context->_buffer.size();
+	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	DWORD numOfBytes = 0;
 	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &numOfBytes, 0, (LPWSAOVERLAPPED)context, NULL))
+	{
+		auto ret = WSAGetLastError();
+		return ret == WSA_IO_PENDING;
+	}
+
+	return true;
+}
+
+bool socket::recv(context* context)
+{
+	if (!context)
+		return false;
+
+	context->init();
+	context->_io_type = io_type::receive;
+
+	WSABUF wsaBuf;
+	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
+	wsaBuf.buf = context->_buffer.data();
+
+	DWORD flag = 0;
+	DWORD numOfBytes = 0;
+	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, (LPWSAOVERLAPPED)context, NULL))
 	{
 		auto ret = WSAGetLastError();
 		return ret == WSA_IO_PENDING;

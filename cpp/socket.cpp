@@ -138,7 +138,7 @@ bool socket::send(context* context)
 	context->_io_type = io_type::send;
 
 	WSABUF wsaBuf;
-	wsaBuf.len = context->_buffer.size();
+	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	DWORD numOfBytes = 0;
@@ -160,7 +160,7 @@ bool socket::recv(context* context)
 	context->_io_type = io_type::receive;
 
 	WSABUF wsaBuf;
-	wsaBuf.len = context->_buffer.size();
+	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	DWORD flag = 0;

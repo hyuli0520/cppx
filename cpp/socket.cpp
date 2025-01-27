@@ -170,6 +170,11 @@ bool socket::send(context* context)
 	return true;
 }
 
+bool socket::send(char* msg)
+{
+	return SOCKET_ERROR != ::send(_sock, msg, sizeof(msg), 0);
+}
+
 bool socket::recv(context* context)
 {
 	if (!context)

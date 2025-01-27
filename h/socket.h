@@ -49,6 +49,7 @@ namespace cppx
 		bool connect(context* context);
 		bool disconnect(context* context);
 		bool send(context* context);
+		bool send(char* msg);
 		bool recv(context* context);
 
 		bool set_linger(short onoff, short linger);

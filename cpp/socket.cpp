@@ -198,6 +198,12 @@ bool socket::recv(context* context)
 	return true;
 }
 
+int socket::recv(char* msg)
+{
+	auto result = ::recv(_sock, msg, sizeof(msg), 0);
+	return result;
+}
+
 bool socket::set_linger(short onoff, short linger)
 {
 	LINGER option;

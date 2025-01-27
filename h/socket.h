@@ -47,6 +47,7 @@ namespace cppx
 		socket accept() const;
 		bool accept(context* context);
 		bool connect(context* context);
+		bool disconnect(context* context);
 		bool send(context* context);
 		bool recv(context* context);
 

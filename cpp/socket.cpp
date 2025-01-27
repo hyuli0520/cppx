@@ -129,6 +129,25 @@ bool socket::connect(context* context)
 	return true;
 }
 
+bool socket::disconnect(context* context)
+{
+	if (!context)
+		return false;
+
+	context->init();
+	context->_io_type = io_type::disconnect;
+	_endpoint = nullptr;
+
+	DWORD flag = 0;
+	if (!native::disconnect(_sock, (LPOVERLAPPED)context, flag, NULL))
+	{
+		const auto error = WSAGetLastError();
+		return error == WSA_IO_PENDING;
+	}
+
+	return true;
+}
+
 bool socket::send(context* context)
 {
 	if (!context)

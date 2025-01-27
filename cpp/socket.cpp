@@ -129,6 +129,25 @@ bool socket::connect(context* context)
 	return true;
 }
 
+bool socket::disconnect(context* context)
+{
+	if (!context)
+		return false;
+
+	context->init();
+	context->_io_type = io_type::disconnect;
+	_endpoint = nullptr;
+
+	DWORD flag = 0;
+	if (!native::disconnect(_sock, (LPOVERLAPPED)context, flag, NULL))
+	{
+		const auto error = WSAGetLastError();
+		return error == WSA_IO_PENDING;
+	}
+
+	return true;
+}
+
 bool socket::send(context* context)
 {
 	if (!context)
@@ -149,6 +168,11 @@ bool socket::send(context* context)
 	}
 
 	return true;
+}
+
+bool socket::send(char* msg)
+{
+	return SOCKET_ERROR != ::send(_sock, msg, sizeof(msg), 0);
 }
 
 bool socket::recv(context* context)
@@ -172,6 +196,12 @@ bool socket::recv(context* context)
 	}
 
 	return true;
+}
+
+int socket::recv(char* msg)
+{
+	auto result = ::recv(_sock, msg, sizeof(msg), 0);
+	return result;
 }
 
 bool socket::set_linger(short onoff, short linger)

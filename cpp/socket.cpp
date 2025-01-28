@@ -38,7 +38,7 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
-void cppx::socket::set_endpoint(endpoint ep)
+void socket::set_endpoint(endpoint ep)
 {
 	_endpoint = make_shared<endpoint>(ep);
 }
@@ -217,22 +217,22 @@ bool socket::set_reuse_address(bool flag)
 	return set_option(SOL_SOCKET, SO_REUSEADDR, flag);
 }
 
-bool cppx::socket::set_recv_buffer(int size)
+bool socket::set_recv_buffer(int size)
 {
 	return set_option(SOL_SOCKET, SO_RCVBUF, size);
 }
 
-bool cppx::socket::set_send_buffer(int size)
+bool socket::set_send_buffer(int size)
 {
 	return set_option(SOL_SOCKET, SO_SNDBUF, size);
 }
 
-bool cppx::socket::set_tcp_nodelay(bool flag)
+bool socket::set_tcp_nodelay(bool flag)
 {
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
 }
 
-bool cppx::socket::set_update_accept(socket listen_sock)
+bool socket::set_update_accept(socket listen_sock)
 {
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);
 }

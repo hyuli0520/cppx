@@ -96,7 +96,7 @@ bool socket::accept(context* context)
 	DWORD dwBytes;
 	char buf[1024];
 
-	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(&context)))
+	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
@@ -139,7 +139,7 @@ bool socket::disconnect(context* context)
 	_endpoint = nullptr;
 
 	DWORD flag = 0;
-	if (!native::disconnect(_sock, (LPOVERLAPPED)context, flag, NULL))
+	if (!native::disconnect(_sock, reinterpret_cast<LPOVERLAPPED>(context), flag, NULL))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
@@ -161,7 +161,7 @@ bool socket::send(context* context)
 	wsaBuf.buf = context->_buffer.data();
 
 	DWORD numOfBytes = 0;
-	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &numOfBytes, 0, (LPWSAOVERLAPPED)context, NULL))
+	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &numOfBytes, 0, reinterpret_cast<LPWSAOVERLAPPED>(context), NULL))
 	{
 		auto ret = WSAGetLastError();
 		return ret == WSA_IO_PENDING;
@@ -189,7 +189,7 @@ bool socket::recv(context* context)
 
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
-	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, (LPWSAOVERLAPPED)context, NULL))
+	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, reinterpret_cast<LPWSAOVERLAPPED>(context), NULL))
 	{
 		auto ret = WSAGetLastError();
 		return ret == WSA_IO_PENDING;

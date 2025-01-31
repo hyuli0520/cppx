@@ -129,6 +129,19 @@ bool socket::connect(context* context)
 	return true;
 }
 
+bool cppx::socket::connect(endpoint ep)
+{
+	if (!not_invalid())
+		return false;
+
+	if (!native::observe(this))
+		return false;
+
+	_endpoint = make_shared<endpoint>(ep);
+	ip_address ipAddr = ep.get_address();
+	return SOCKET_ERROR != ::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(ip_address));
+}
+
 bool socket::disconnect(context* context)
 {
 	if (!context)

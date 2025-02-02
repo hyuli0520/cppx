@@ -3,6 +3,7 @@
 using namespace cppx;
 
 ip_address ip_address::any = change(INADDR_ANY);
+ip_address ip_address::loopback = change(INADDR_LOOPBACK);
 
 ip_address::ip_address() : sockaddr_in()
 {

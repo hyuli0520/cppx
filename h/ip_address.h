@@ -8,6 +8,7 @@ namespace cppx
 	{
 	public:
 		static ip_address any;
+		static ip_address loopback;
 
 	public:
 		ip_address();

@@ -183,9 +183,9 @@ bool socket::send(context* context)
 	return true;
 }
 
-bool socket::send(char* msg)
+bool socket::send(vector<char> msg)
 {
-	return SOCKET_ERROR != ::send(_sock, msg, sizeof(msg), 0);
+	return SOCKET_ERROR != ::send(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
 
 bool socket::recv(context* context)
@@ -211,9 +211,9 @@ bool socket::recv(context* context)
 	return true;
 }
 
-int socket::recv(char* msg)
+int socket::recv(vector<char> msg)
 {
-	auto result = ::recv(_sock, msg, sizeof(msg), 0);
+	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 	return result;
 }
 

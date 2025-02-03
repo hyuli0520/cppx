@@ -129,7 +129,7 @@ bool socket::connect(context* context)
 	return true;
 }
 
-bool cppx::socket::connect(endpoint ep)
+bool socket::connect(endpoint ep)
 {
 	if (!not_invalid())
 		return false;

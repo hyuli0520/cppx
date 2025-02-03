@@ -9,7 +9,7 @@ int main()
 {
 	native::init(5);
 
-	cppx::socket sock(cppx::protocol::tcp);
+	cppx::socket sock(protocol::tcp);
 	if (!sock.not_invalid())
 		return -1;
 	if (!sock.bind(endpoint(ip_address::any, 7777)))

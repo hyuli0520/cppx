@@ -129,7 +129,7 @@ bool socket::connect(context* context)
 	return true;
 }
 
-bool cppx::socket::connect(endpoint ep)
+bool socket::connect(endpoint ep)
 {
 	if (!not_invalid())
 		return false;
@@ -211,7 +211,7 @@ bool socket::recv(context* context)
 	return true;
 }
 
-int socket::recv(vector<char> msg)
+int socket::recv(vector<char>& msg)
 {
 	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 	return result;

@@ -211,7 +211,7 @@ bool socket::recv(context* context)
 	return true;
 }
 
-int socket::recv(vector<char> msg)
+int socket::recv(vector<char>& msg)
 {
 	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 	return result;

@@ -53,6 +53,7 @@ namespace cppx
 		bool send(vector<char> msg);
 		bool recv(context* context);
 		int recv(vector<char>& msg);
+		int recv(char* buf, size_t len);
 
 		bool set_linger(short onoff, short linger);
 		bool set_reuse_address(bool flag);

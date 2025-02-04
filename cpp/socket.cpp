@@ -217,6 +217,11 @@ int socket::recv(vector<char>& msg)
 	return result;
 }
 
+int cppx::socket::recv(char* buf, size_t len)
+{
+	return ::recv(_sock, buf, static_cast<int>(len), 0);
+}
+
 bool socket::set_linger(short onoff, short linger)
 {
 	LINGER option;

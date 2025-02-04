@@ -19,7 +19,11 @@ int main()
 
 	while (true)
 	{
+		char buf[100] = { 0 };
 		auto client = sock.accept();
+		int receive = client.recv(buf, sizeof(buf));
 		cout << "connected" << endl;
+		cout << "receive bytes : " << receive << endl;
+		cout << "recv : " << buf << endl;
 	}
 }

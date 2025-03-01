@@ -20,8 +20,10 @@ int main()
 	while (true)
 	{
 		char buf[100] = { 0 };
+		context context;
+		context._buffer.emplace_back(buf);
 		auto client = sock.accept();
-		int receive = client.recv(buf, sizeof(buf));
+		int receive = client.recv(&context);
 		cout << "connected" << endl;
 		cout << "receive bytes : " << receive << endl;
 		cout << "recv : " << buf << endl;

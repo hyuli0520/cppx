@@ -41,10 +41,7 @@ void native::start_io(int num)
 {
 	for (int i = 0; i < num; i++)
 	{
-		while (true)
-		{
-			new thread(&gqcs);
-		}
+		new thread(&gqcs);
 	}
 }
 

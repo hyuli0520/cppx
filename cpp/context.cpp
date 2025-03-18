@@ -2,7 +2,7 @@
 
 using namespace cppx;
 
-context::context() : OVERLAPPED(), _socket(nullptr), _io_type(io_type::none)
+context::context() : OVERLAPPED(), _io_type(io_type::none)
 {
 	init();
 }

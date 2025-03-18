@@ -21,7 +21,7 @@ int main()
 	{
 		char buf[100] = { 0 };
 		context context;
-		context._buffer.emplace_back(buf);
+		context._buffer = vector<char>(buf, buf + 100);
 		auto client = sock.accept();
 		int receive = client.recv(&context);
 		cout << "connected" << endl;

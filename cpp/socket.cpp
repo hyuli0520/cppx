@@ -66,7 +66,7 @@ bool socket::bind(endpoint ep)
 	ip_address ipAddr = _endpoint->get_address();
 
 	if (::bind(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)) != SOCKET_ERROR)
-		return true;
+		return native::observe(this);
 
 	return false;
 }

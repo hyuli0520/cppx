@@ -66,7 +66,7 @@ namespace cppx
 		template<typename t>
 		bool set_option(int level, int opt_name, t opt_val)
 		{
-			if (_sock == INVALID_SOCKET)
+			if (_sock == INVALID_SOCKET || this == nullptr)
 				return false;
 			return SOCKET_ERROR != setsockopt(_sock, level, opt_name, reinterpret_cast<char*>(&opt_val), sizeof(t));
 		};

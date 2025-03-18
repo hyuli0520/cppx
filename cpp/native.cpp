@@ -100,6 +100,7 @@ bool native::process(context* context)
 			return false;
 		auto endpoint = endpoint::place(addr);
 		context->_socket->set_endpoint(endpoint);
+		endpoint.set_port(listen_socket->get_endpoint()->get_port());
 	}
 	break;
 	case io_type::connect:

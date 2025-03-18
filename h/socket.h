@@ -36,6 +36,7 @@ namespace cppx
 		SOCKET get_handle() const;
 		void set_handle(SOCKET sock);
 
+		shared_ptr<endpoint> get_endpoint();
 		void set_endpoint(endpoint ep);
 
 		void close();

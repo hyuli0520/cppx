@@ -38,6 +38,11 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
+shared_ptr<endpoint> socket::get_endpoint()
+{
+	return _endpoint;
+}
+
 void socket::set_endpoint(endpoint ep)
 {
 	_endpoint = make_shared<endpoint>(ep);

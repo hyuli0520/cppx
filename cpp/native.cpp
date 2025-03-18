@@ -105,7 +105,7 @@ bool native::process(context* context)
 	case io_type::connect:
 	{
 		cppx::context connectContext;
-		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, connectContext))
+		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, &connectContext))
 			return false;
 	}
 	break;

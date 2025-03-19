@@ -62,7 +62,7 @@ void native::gqcs()
 		auto result = ::GetQueuedCompletionStatus(_cp, &numofBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&context), INFINITE);
 		if (result)
 		{
-			process(context);
+			process(context, true);
 			break;
 		}
 		else
@@ -73,7 +73,7 @@ void native::gqcs()
 			case WAIT_TIMEOUT:
 				return;
 			default:
-				process(context);
+				process(context, false);
 				break;
 			}
 		}
@@ -81,38 +81,41 @@ void native::gqcs()
 
 }
 
-bool native::process(context* context)
+bool native::process(context* context, bool success)
 {
 	switch (context->_io_type)
 	{
 	case io_type::accept:
-	{
-		auto listen_socket = context->_socket.get();
-		if (!observe(context->_socket.get()))
-			return false;
+		if (success)
+		{
+			auto listen_socket = context->_socket.get();
+			if (!observe(context->_socket.get()))
+				return false;
 
-		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
-			return false;
+			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
+				return false;
 
-		sockaddr_in addr;
-		int len = sizeof(sockaddr_in);
-		if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
-			return false;
-		auto endpoint = endpoint::place(addr);
-		context->_socket->set_endpoint(endpoint);
-	}
-	break;
+			sockaddr_in addr;
+			int len = sizeof(sockaddr_in);
+			if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
+				return false;
+			auto endpoint = endpoint::place(addr);
+			context->_socket->set_endpoint(endpoint);
+		}
+		context->completed_callback(context, success);
+		break;
 	case io_type::connect:
-	{
-		if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, nullptr))
-			return false;
-	}
-	break;
+		if (success)
+		{
+			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, nullptr))
+				return false;
+		}
+		context->completed_callback(context, success);
+		break;
 	case io_type::disconnect:
-		break;
 	case io_type::receive:
-		break;
 	case io_type::send:
+		context->completed_callback(context, success);
 		break;
 	default:
 		return false;

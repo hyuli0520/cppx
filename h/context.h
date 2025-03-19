@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 #include "native.h"
 #include "endpoint.h"
@@ -17,6 +18,7 @@ namespace cppx
 
 	class context : OVERLAPPED
 	{
+		using callback = function<void(context*, bool)>;
 	public:
 		context();
 		~context();
@@ -25,6 +27,7 @@ namespace cppx
 
 	public:
 		shared_ptr<endpoint> endpoint;
+		callback completed_callback;
 
 	public:
 		shared_ptr<socket> _socket;

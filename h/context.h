@@ -18,7 +18,7 @@ namespace cppx
 
 	class context : OVERLAPPED
 	{
-		using callback = function<void(context*, bool)>;
+		using callback = std::function<void(context*, bool)>;
 	public:
 		context();
 		~context();

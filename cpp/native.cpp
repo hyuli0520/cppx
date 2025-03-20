@@ -113,6 +113,8 @@ bool native::process(context* context, bool success)
 		context->completed_callback(context, success);
 		break;
 	case io_type::disconnect:
+		context->completed_callback(context, success);
+		break;
 	case io_type::receive:
 	case io_type::send:
 		context->completed_callback(context, success);

@@ -116,7 +116,10 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 		context->completed_callback(context, success);
 		break;
 	case io_type::receive:
+		if (numofBytes == 0)
+			return true;
 	case io_type::send:
+		context->length = numofBytes;
 		context->completed_callback(context, success);
 		break;
 	default:

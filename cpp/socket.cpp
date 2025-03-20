@@ -178,8 +178,7 @@ bool socket::send(context* context)
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
-	DWORD numOfBytes = 0;
-	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &numOfBytes, 0, reinterpret_cast<LPWSAOVERLAPPED>(context), NULL))
+	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &wsaBuf.len, 0, reinterpret_cast<LPWSAOVERLAPPED>(context), NULL))
 	{
 		auto ret = WSAGetLastError();
 		return ret == WSA_IO_PENDING;

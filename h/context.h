@@ -28,6 +28,7 @@ namespace cppx
 	public:
 		shared_ptr<endpoint> endpoint;
 		callback completed_callback;
+		unsigned long length;
 
 	public:
 		shared_ptr<socket> _socket;

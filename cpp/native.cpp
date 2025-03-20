@@ -62,7 +62,7 @@ void native::gqcs()
 		auto result = ::GetQueuedCompletionStatus(_cp, &numofBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&context), INFINITE);
 		if (result)
 		{
-			process(context, true);
+			process(context, numofBytes, true);
 			break;
 		}
 		else
@@ -73,7 +73,7 @@ void native::gqcs()
 			case WAIT_TIMEOUT:
 				return;
 			default:
-				process(context, false);
+				process(context, numofBytes, false);
 				break;
 			}
 		}
@@ -81,7 +81,7 @@ void native::gqcs()
 
 }
 
-bool native::process(context* context, bool success)
+bool native::process(context* context, unsigned long numofBytes, bool success)
 {
 	switch (context->_io_type)
 	{

@@ -63,7 +63,6 @@ void native::gqcs()
 		if (result)
 		{
 			process(context, numofBytes, true);
-			break;
 		}
 		else
 		{

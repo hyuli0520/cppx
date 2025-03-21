@@ -119,7 +119,7 @@ bool socket::connect(context* context)
 	context->_io_type = io_type::connect;
 	_endpoint = context->endpoint;
 
-	if (!bind(endpoint(ip_address::any, 7777)))
+	if (!bind(endpoint(ip_address::any, 0)))
 		return false;
 
 	DWORD dwBytes;

@@ -16,7 +16,7 @@ namespace cppx
 		receive
 	};
 
-	class context : OVERLAPPED
+	class context : public OVERLAPPED
 	{
 		using callback = std::function<void(context*, bool)>;
 	public:

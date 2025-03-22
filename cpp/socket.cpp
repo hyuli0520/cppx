@@ -202,23 +202,13 @@ bool socket::recv(context* context)
 
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
-	if (context->_buffer.empty())
-	{
-		WSABUF wsaBuf;
-		wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
-		wsaBuf.buf = context->_buffer.data();
+	
+	WSABUF wsaBuf;
+	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
+	wsaBuf.buf = context->_buffer.data();
 
-		if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
-		{
-			auto ret = WSAGetLastError();
-			return ret == WSA_IO_PENDING;
-		}
-	}
-	else
-	{
-		if (SOCKET_ERROR == ::WSARecv(_sock, reinterpret_cast<LPWSABUF>(context->_buffer.data()), static_cast<DWORD>(context->_buffer.size()), &numOfBytes, &flag, context, nullptr))
-			return WSA_IO_PENDING == WSAGetLastError();
-	}
+	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
+		return WSA_IO_PENDING == WSAGetLastError();
 
 	return true;
 }

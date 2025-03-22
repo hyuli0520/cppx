@@ -197,13 +197,13 @@ bool socket::recv(context* context)
 	if (!context)
 		return false;
 
+	context->init();
+	context->_io_type = io_type::receive;
+
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
 	if (context->_buffer.empty())
 	{
-		context->init();
-		context->_io_type = io_type::receive;
-
 		WSABUF wsaBuf;
 		wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 		wsaBuf.buf = context->_buffer.data();

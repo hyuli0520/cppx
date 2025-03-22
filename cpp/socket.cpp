@@ -101,7 +101,7 @@ bool socket::accept(context* context)
 	DWORD dwBytes;
 	char buf[1024];
 
-	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
+	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;

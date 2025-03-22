@@ -208,7 +208,7 @@ bool socket::recv(context* context)
 		wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 		wsaBuf.buf = context->_buffer.data();
 
-		if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, reinterpret_cast<LPWSAOVERLAPPED>(context), NULL))
+		if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
 		{
 			auto ret = WSAGetLastError();
 			return ret == WSA_IO_PENDING;
@@ -216,7 +216,7 @@ bool socket::recv(context* context)
 	}
 	else
 	{
-		if (SOCKET_ERROR == ::WSARecv(_sock, reinterpret_cast<LPWSABUF>(context->_buffer.data()), static_cast<DWORD>(context->_buffer.size()), &numOfBytes, &flag, reinterpret_cast<LPWSAOVERLAPPED>(context), nullptr))
+		if (SOCKET_ERROR == ::WSARecv(_sock, reinterpret_cast<LPWSABUF>(context->_buffer.data()), static_cast<DWORD>(context->_buffer.size()), &numOfBytes, &flag, context, nullptr))
 			return WSA_IO_PENDING == WSAGetLastError();
 	}
 

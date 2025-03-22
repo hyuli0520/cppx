@@ -101,7 +101,7 @@ bool socket::accept(context* context)
 	DWORD dwBytes;
 	char buf[1024];
 
-	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
+	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
@@ -125,11 +125,8 @@ bool socket::connect(context* context)
 	DWORD dwBytes;
 	ip_address ipAddr = context->endpoint->get_address();
 
-	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
-	{
-		const auto error = WSAGetLastError();
-		return error == WSA_IO_PENDING;
-	}
+	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
+		return WSA_IO_PENDING == WSAGetLastError();
 
 	return true;
 }

@@ -125,11 +125,8 @@ bool socket::connect(context* context)
 	DWORD dwBytes;
 	ip_address ipAddr = context->endpoint->get_address();
 
-	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, reinterpret_cast<LPOVERLAPPED>(context)))
-	{
-		const auto error = WSAGetLastError();
-		return error == WSA_IO_PENDING;
-	}
+	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
+		return WSA_IO_PENDING == WSAGetLastError();
 
 	return true;
 }

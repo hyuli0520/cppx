@@ -163,6 +163,16 @@ bool socket::disconnect(context* context)
 	return true;
 }
 
+bool socket::disconnect()
+{
+	if (!not_invalid())
+		return false;
+
+	::shutdown(_sock, SD_BOTH);
+	close();
+	_endpoint = nullptr;
+}
+
 bool socket::send(context* context)
 {
 	if (!context)

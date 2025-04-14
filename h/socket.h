@@ -50,6 +50,7 @@ namespace cppx
 		bool connect(context* context);
 		bool connect(endpoint ep);
 		bool disconnect(context* context);
+		bool disconnect();
 		bool send(context* context);
 		bool send(vector<char> msg);
 		bool recv(context* context);

@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <memory>
 
 #include "native.h"
 #include "endpoint.h"
@@ -16,7 +17,10 @@ namespace cppx
 		receive
 	};
 
-	class context : public OVERLAPPED
+	class context
+	#ifdef _WIN32
+		: public OVERLAPPED
+	#endif
 	{
 		using callback = std::function<void(context*, bool)>;
 	public:

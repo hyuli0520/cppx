@@ -87,14 +87,22 @@ bool native::observe(socket* sock)
 	auto result = ::CreateIoCompletionPort(reinterpret_cast<HANDLE>(sock->get_handle()), _cp, 0, 0);
 	return result != nullptr;
 #else
+	int fd = sock->get_handle();
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.ptr = sock;
+	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
+	{
+		perror("epoll_ctl");
+		return false;
+	}
 	return true;
 #endif
 }
 
 void native::gqcs()
 {
-	context* context = nullptr;
 #ifdef _WIN32
+	context* context = nullptr;
 	ULONG_PTR key = 0;
 	DWORD numofBytes = 0;
 #endif
@@ -120,7 +128,27 @@ void native::gqcs()
 			}
 		}
 	#else
+		int nfds = epoll_wait(_epfd, evlist, 256, -1);
+		if (nfds == -1)
+		{
+			perror("epoll_wait");
+			continue;
+		}
 		
+		for (int i = 0; i < nfds; i++) 
+		{
+			auto context = reinterpret_cast<context*>(evlist[i].data.ptr);
+			if (context != nullptr)
+			{
+				process(context, 0, true);
+			}
+			else
+			{
+				perror("context");
+				process(context, 0, false);
+				break;
+			}
+		}
 	#endif
 	}
 }
@@ -139,6 +167,9 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 
 			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
 				return false;
+		#else
+			context->_socket->close();
+			context->_socket->set_handle(static_cast<SOCKET>(numofBytes));
 		#endif
 			sockaddr_in addr;
 			socklen_t len = sizeof(sockaddr_in);

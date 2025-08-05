@@ -16,6 +16,23 @@ bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 }
 
 HANDLE native::_cp = nullptr;
+#else
+bool native::make_non_blocking(int fd)
+{
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1)
+	{
+		perror("fcntl");
+		return -1;
+	}
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+	{
+		perror("fcntl");
+		return -1;
+	}
+	
+	return 0;
+}
 #endif
 
 bool native::init(int num)
@@ -34,6 +51,22 @@ bool native::init(int num)
 		return false;
 
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+#else
+	_epfd = epoll_create1(0);
+	if (_epfd == -1)
+	{
+		perror("epoll_create1");
+		exit(EXIT_FAILURE);
+	}
+
+	if (make_non_blocking(STDIN_FILENO) == -1)
+	{
+		close(_epfd);
+		exit(EXIT_FAILURE);
+	}
+	
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.fd = STDIN_FILENO;
 #endif
 	start_io(num);
 

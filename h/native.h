@@ -14,10 +14,12 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <errno.h>
+#include <fcntl>
 #include <unistd.h>
 #include <cstring>
 
-#define SOCKET_ERROR -1;
+#define SOCKET_ERROR -1
 using SOCKET = int;
 
 #endif
@@ -43,6 +45,8 @@ namespace cppx
 		static bool init(int num);
 	#ifdef _WIN32
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
+	#else
+		static bool make_non_blocking(int fd);
 	#endif
 		static void start_io(int num);
 
@@ -53,6 +57,10 @@ namespace cppx
 	private:
 	#ifdef _WIN32
 		static HANDLE _cp;
+	#else
+		static int _epfd;
+		static struct epoll_event ev;
+		static struct epoll_event evlist[256];
 	#endif
 	};
 }

@@ -30,7 +30,7 @@ namespace cppx
 		void init();
 
 	public:
-		shared_ptr<endpoint> endpoint;
+		shared_ptr<endpoint> ep;
 		callback completed_callback;
 		unsigned long length;
 

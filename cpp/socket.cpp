@@ -105,7 +105,7 @@ bool socket::accept(context* context)
 #ifdef _WIN32
 	DWORD dwBytes;
 	char buf[1024];
-	
+
 	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
 		const auto error = WSAGetLastError();
@@ -123,14 +123,14 @@ bool socket::connect(context* context)
 
 	context->init();
 	context->_io_type = io_type::connect;
-	_endpoint = context->endpoint;
+	_endpoint = context->ep;
 
 	if (!bind(endpoint(ip_address::any, 0)))
 		return false;
 
 #ifdef _WIN32
 	DWORD dwBytes;
-	ip_address ipAddr = context->endpoint->get_address();
+	ip_address ipAddr = context->ep->get_address();
 
 	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
 		return WSA_IO_PENDING == WSAGetLastError();

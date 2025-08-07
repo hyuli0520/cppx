@@ -54,6 +54,12 @@ namespace cppx
 		static void gqcs();
 		static bool process(context* context, unsigned long numofBytes, bool success);
 
+	#ifdef _WIN32
+		static HANDLE get_handle();
+	#else
+		static int get_handle();
+	#endif
+
 	private:
 	#ifdef _WIN32
 		static HANDLE _cp;

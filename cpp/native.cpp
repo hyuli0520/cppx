@@ -206,3 +206,15 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 
 	return true;
 }
+
+#ifdef _WIN32
+static HANDLE get_handle()
+{
+	return _cp;
+}
+#else
+static int get_handle()
+{
+	return _epfd;
+}
+#endif

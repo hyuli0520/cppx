@@ -17,7 +17,7 @@ bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
 
 HANDLE native::_cp = nullptr;
 #else
-bool native::make_non_blocking(int fd)
+int native::make_non_blocking(int fd)
 {
 	int flags = fcntl(fd, F_GETFL, 0);
 	if (flags == -1)

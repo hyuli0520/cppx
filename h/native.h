@@ -1,8 +1,8 @@
 #pragma once
-#pragma comment(lib, "ws2_32.lib")
 
 #include <iostream>
 #ifdef _WIN32
+#pragma comment(lib, "ws2_32.lib")
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #include <windows.h>
@@ -15,11 +15,12 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
-#include <fcntl>
+#include <fcntl.h>
 #include <unistd.h>
 #include <cstring>
 
 #define SOCKET_ERROR -1
+#define INVALID_SOCKET SOCKET_ERROR
 using SOCKET = int;
 
 #endif
@@ -46,7 +47,7 @@ namespace cppx
 	#ifdef _WIN32
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
 	#else
-		static bool make_non_blocking(int fd);
+		static int make_non_blocking(int fd);
 	#endif
 		static void start_io(int num);
 

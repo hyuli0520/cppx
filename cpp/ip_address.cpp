@@ -26,7 +26,7 @@ ip_address::ip_address(const char* ip)
 
 ip_address ip_address::change(int ip)
 {
-	ip_address addr;
+	ip_address addr{};
 	::memset(&addr, 0, sizeof(sockaddr_in));
 	addr.sin_addr.s_addr = htonl(ip);
 	return addr;

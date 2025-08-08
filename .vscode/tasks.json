@@ -24,14 +24,13 @@
                 "-g",                                               // 디버그 정보 포함 옵션
                 "-Wall",
                 "-Wextra",
-                "-Werror",
                 "-I", "${workspaceFolder}/h",
                 "-I", "${workspaceFolder}/cpp",     // 인클루드 경로
-                "${workspaceFolder}/test/main.cpp", // 실제 컴파일할 소스만
+                "${workspaceFolder}/test/*.cpp", // 실제 컴파일할 소스만
                 "${workspaceFolder}/cpp/*.cpp",     // 필요하면 소스 파일들 직접 지정                                         // 소스파일
                 "-o",                                               // Output 출력파일 = 실행파일
-                "${workspaceFolder}/Debug/${fileBasenameNoExtension}" // 빌드 결과 파일의 저장 경로와 파일명 형식
-				//, "-std=gnu++11"                                  // (opt) 특정 컴파일러 버전 선택시 지정
+                "${workspaceFolder}/Debug/${fileBasenameNoExtension}", // 빌드 결과 파일의 저장 경로와 파일명 형식
+				"-std=gnu++17"                                  // (opt) 특정 컴파일러 버전 선택시 지정
             ],
             "options": {
                 "cwd": "/usr/bin"

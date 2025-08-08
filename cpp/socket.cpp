@@ -178,7 +178,11 @@ bool socket::disconnect()
 	if (!not_invalid())
 		return false;
 
+#ifdef _WIN32
 	::shutdown(_sock, SD_BOTH);
+#else
+	::shutdown(_sock, SHUT_RDWR);
+#endif
 	close();
 	_endpoint = nullptr;
 }
@@ -244,9 +248,15 @@ int cppx::socket::recv(char* buf, size_t len)
 
 bool socket::set_linger(short onoff, short linger)
 {
-	LINGER option;
+#ifdef _WIN32
+	LINGER option;	
 	option.l_onoff = onoff;
 	option.l_linger = linger;
+#else
+	struct linger option{};
+	option.l_onoff = onoff;
+	option.l_linger = linger;
+#endif
 	return set_option(SOL_SOCKET, SO_LINGER, option);
 }
 
@@ -267,10 +277,14 @@ bool socket::set_send_buffer(int size)
 
 bool socket::set_tcp_nodelay(bool flag)
 {
+#ifdef _WIN32
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
+#endif
 }
 
 bool socket::set_update_accept(socket listen_sock)
 {
+#ifdef _WIN32
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);
+#endif
 }

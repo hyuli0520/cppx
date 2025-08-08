@@ -33,6 +33,10 @@ int native::make_non_blocking(int fd)
 	
 	return 0;
 }
+
+int native::_epfd = -1;
+struct epoll_event native::ev = {};
+struct epoll_event native::evlist[256] = {};
 #endif
 
 bool native::init(int num)
@@ -137,15 +141,15 @@ void native::gqcs()
 		
 		for (int i = 0; i < nfds; i++) 
 		{
-			auto context = reinterpret_cast<context*>(evlist[i].data.ptr);
-			if (context != nullptr)
+			auto ctx = reinterpret_cast<context*>(evlist[i].data.ptr);
+			if (ctx != nullptr)
 			{
-				process(context, 0, true);
+				process(ctx, 0, true);
 			}
 			else
 			{
 				perror("context");
-				process(context, 0, false);
+				process(ctx, 0, false);
 				break;
 			}
 		}
@@ -208,12 +212,12 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 }
 
 #ifdef _WIN32
-static HANDLE get_handle()
+HANDLE native::get_handle()
 {
 	return _cp;
 }
 #else
-static int get_handle()
+int native::get_handle()
 {
 	return _epfd;
 }

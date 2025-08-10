@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <memory>
 
 #include "native.h"
 #include "endpoint.h"
@@ -16,7 +17,10 @@ namespace cppx
 		receive
 	};
 
-	class context : public OVERLAPPED
+	class context
+	#ifdef _WIN32
+		: public OVERLAPPED
+	#endif
 	{
 		using callback = std::function<void(context*, bool)>;
 	public:
@@ -26,7 +30,7 @@ namespace cppx
 		void init();
 
 	public:
-		shared_ptr<endpoint> endpoint;
+		shared_ptr<endpoint> ep;
 		callback completed_callback;
 		unsigned long length;
 

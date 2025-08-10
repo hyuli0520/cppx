@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",                                             // debug 작업 이름
+            "type": "cppdbg",                                                   // debug type
+            "request": "launch",                                                // debug request
+            "program": "${workspaceFolder}/Debug/${fileBasenameNoExtension}",   // launch 하는 대상, 실행 프로그램
+            "args": [],                                                         // 실행 프로그램에 대해 전달할 인자가 필요한 경우
+            "stopAtEntry": false,                                               // debug 시작 후, main 시작에서 정지 여부
+            "cwd": "${fileDirname}",                                            // 작업 경로
+            "environment": [],                                                  // 환경 변수 설정
+            "externalConsole": false,                                           // vscode terminal 외, 외부의 terminal 실행 여부
+            "MIMode": "gdb",                                                    // debugger 종류
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "save and build for C/C++ Debug"                   // launch 실행 전 사전작업, e.g) task.json build
+        }
+    ]
+}

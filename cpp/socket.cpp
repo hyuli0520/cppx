@@ -52,7 +52,11 @@ void socket::close()
 {
 	if (_sock != INVALID_SOCKET)
 	{
+	#ifdef _WIN32
 		closesocket(_sock);
+	#else
+		::close(_sock);
+	#endif
 		_sock = INVALID_SOCKET;
 	}
 }
@@ -98,6 +102,7 @@ bool socket::accept(context* context)
 	context->_io_type = io_type::accept;
 	context->_socket = make_shared<socket>(protocol::tcp);
 
+#ifdef _WIN32
 	DWORD dwBytes;
 	char buf[1024];
 
@@ -106,6 +111,7 @@ bool socket::accept(context* context)
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#endif
 
 	return true;
 }
@@ -117,16 +123,18 @@ bool socket::connect(context* context)
 
 	context->init();
 	context->_io_type = io_type::connect;
-	_endpoint = context->endpoint;
+	_endpoint = context->ep;
 
 	if (!bind(endpoint(ip_address::any, 0)))
 		return false;
 
+#ifdef _WIN32
 	DWORD dwBytes;
-	ip_address ipAddr = context->endpoint->get_address();
+	ip_address ipAddr = context->ep->get_address();
 
 	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
 		return WSA_IO_PENDING == WSAGetLastError();
+#endif
 
 	return true;
 }
@@ -153,12 +161,14 @@ bool socket::disconnect(context* context)
 	context->_io_type = io_type::disconnect;
 	_endpoint = nullptr;
 
+#ifdef _WIN32
 	DWORD flag = 0;
 	if (!native::disconnect(_sock, reinterpret_cast<LPOVERLAPPED>(context), flag, NULL))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#endif
 
 	return true;
 }
@@ -168,7 +178,11 @@ bool socket::disconnect()
 	if (!not_invalid())
 		return false;
 
+#ifdef _WIN32
 	::shutdown(_sock, SD_BOTH);
+#else
+	::shutdown(_sock, SHUT_RDWR);
+#endif
 	close();
 	_endpoint = nullptr;
 }
@@ -181,12 +195,14 @@ bool socket::send(context* context)
 	context->init();
 	context->_io_type = io_type::send;
 
+#ifdef _WIN32
 	WSABUF wsaBuf;
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &wsaBuf.len, 0, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
+#endif
 
 	return true;
 }
@@ -204,6 +220,7 @@ bool socket::recv(context* context)
 	context->init();
 	context->_io_type = io_type::receive;
 
+#ifdef _WIN32
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
 	
@@ -213,6 +230,7 @@ bool socket::recv(context* context)
 
 	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
+#endif
 
 	return true;
 }
@@ -230,9 +248,15 @@ int cppx::socket::recv(char* buf, size_t len)
 
 bool socket::set_linger(short onoff, short linger)
 {
-	LINGER option;
+#ifdef _WIN32
+	LINGER option;	
 	option.l_onoff = onoff;
 	option.l_linger = linger;
+#else
+	struct linger option{};
+	option.l_onoff = onoff;
+	option.l_linger = linger;
+#endif
 	return set_option(SOL_SOCKET, SO_LINGER, option);
 }
 
@@ -253,10 +277,14 @@ bool socket::set_send_buffer(int size)
 
 bool socket::set_tcp_nodelay(bool flag)
 {
+#ifdef _WIN32
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
+#endif
 }
 
 bool socket::set_update_accept(socket listen_sock)
 {
+#ifdef _WIN32
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);
+#endif
 }

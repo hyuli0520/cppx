@@ -4,14 +4,44 @@
 
 using namespace cppx;
 
+#ifdef _WIN32
 LPFN_ACCEPTEX native::accept = nullptr;
 LPFN_CONNECTEX native::connect = nullptr;
 LPFN_DISCONNECTEX native::disconnect = nullptr;
 
+bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
+{
+	DWORD bytes = 0;
+	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(*fn), &bytes, NULL, NULL);
+}
+
 HANDLE native::_cp = nullptr;
+#else
+int native::make_non_blocking(int fd)
+{
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1)
+	{
+		perror("fcntl");
+		return -1;
+	}
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+	{
+		perror("fcntl");
+		return -1;
+	}
+	
+	return 0;
+}
+
+int native::_epfd = -1;
+struct epoll_event native::ev = {};
+struct epoll_event native::evlist[256] = {};
+#endif
 
 bool native::init(int num)
 {
+#ifdef _WIN32
 	WSADATA wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		return false;
@@ -25,16 +55,26 @@ bool native::init(int num)
 		return false;
 
 	_cp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+#else
+	_epfd = epoll_create1(0);
+	if (_epfd == -1)
+	{
+		perror("epoll_create1");
+		exit(EXIT_FAILURE);
+	}
 
+	if (make_non_blocking(STDIN_FILENO) == -1)
+	{
+		close(_epfd);
+		exit(EXIT_FAILURE);
+	}
+	
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.fd = STDIN_FILENO;
+#endif
 	start_io(num);
 
 	return true;
-}
-
-bool native::bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn)
-{
-	DWORD bytes = 0;
-	return SOCKET_ERROR != ::WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(*fn), &bytes, NULL, NULL);
 }
 
 void native::start_io(int num)
@@ -47,19 +87,34 @@ void native::start_io(int num)
 
 bool native::observe(socket* sock)
 {
+#ifdef _WIN32
 	auto result = ::CreateIoCompletionPort(reinterpret_cast<HANDLE>(sock->get_handle()), _cp, 0, 0);
 	return result != nullptr;
+#else
+	int fd = sock->get_handle();
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.ptr = sock;
+	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
+	{
+		perror("epoll_ctl");
+		return false;
+	}
+	return true;
+#endif
 }
 
 void native::gqcs()
 {
+#ifdef _WIN32
 	context* context = nullptr;
 	ULONG_PTR key = 0;
 	DWORD numofBytes = 0;
-
+#endif
 	while (true)
 	{
+	#ifdef _WIN32
 		auto result = ::GetQueuedCompletionStatus(_cp, &numofBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&context), INFINITE);
+		
 		if (result)
 		{
 			process(context, numofBytes, true);
@@ -69,15 +124,37 @@ void native::gqcs()
 			auto error = WSAGetLastError();
 			switch (error)
 			{
-			case WAIT_TIMEOUT:
+				case WAIT_TIMEOUT:
 				return;
-			default:
+				default:
 				process(context, numofBytes, false);
 				break;
 			}
 		}
+	#else
+		int nfds = epoll_wait(_epfd, evlist, 256, -1);
+		if (nfds == -1)
+		{
+			perror("epoll_wait");
+			continue;
+		}
+		
+		for (int i = 0; i < nfds; i++) 
+		{
+			auto ctx = reinterpret_cast<context*>(evlist[i].data.ptr);
+			if (ctx != nullptr)
+			{
+				process(ctx, 0, true);
+			}
+			else
+			{
+				perror("context");
+				process(ctx, 0, false);
+				break;
+			}
+		}
+	#endif
 	}
-
 }
 
 bool native::process(context* context, unsigned long numofBytes, bool success)
@@ -88,14 +165,18 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 		if (success)
 		{
 			auto listen_socket = context->_socket.get();
+		#ifdef _WIN32
 			if (!observe(context->_socket.get()))
 				return false;
 
 			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
 				return false;
-
+		#else
+			context->_socket->close();
+			context->_socket->set_handle(static_cast<SOCKET>(numofBytes));
+		#endif
 			sockaddr_in addr;
-			int len = sizeof(sockaddr_in);
+			socklen_t len = sizeof(sockaddr_in);
 			if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
 				return false;
 			auto endpoint = endpoint::place(addr);
@@ -106,8 +187,10 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 	case io_type::connect:
 		if (success)
 		{
+		#ifdef _WIN32
 			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, nullptr))
 				return false;
+		#endif
 		}
 		context->completed_callback(context, success);
 		break;
@@ -127,3 +210,15 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 
 	return true;
 }
+
+#ifdef _WIN32
+HANDLE native::get_handle()
+{
+	return _cp;
+}
+#else
+int native::get_handle()
+{
+	return _epfd;
+}
+#endif

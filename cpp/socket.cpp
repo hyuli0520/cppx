@@ -230,9 +230,26 @@ bool socket::recv(context* context)
 
 	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
-#endif
 
 	return true;
+#else
+	auto bytes = ::recv(_sock, context->_buffer.data(), static_cast<int>(context->length), 0);
+	if (bytes > 0)
+	{
+		context->length = static_cast<unsigned long>(bytes);
+		native::process(context, bytes, true);
+	}
+    else
+    {
+        if (errno != EAGAIN && errno != EWOULDBLOCK)
+        {
+            perror("recv error");
+            return false;
+        }
+    }
+
+	return bytes;
+#endif
 }
 
 int socket::recv(vector<char>& msg)

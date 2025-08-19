@@ -21,15 +21,13 @@ int main()
 	{
 		char buf[100] = { 0 };
 		auto client = sock.accept();
-#ifdef _WIN32
 		context context;
 		context._buffer = vector<char>(buf, buf + 100);
 		int receive = client.recv(&context);
-#else
-		int receive = client.recv(buf);
-#endif
+// 	vector<char> msg(100, 0);
+// 	int receive = client.recv(msg);
 		cout << "connected" << endl;
 		cout << "receive bytes : " << receive << endl;
-		cout << "recv : " << buf << endl;
+		cout << "recv : " << context._buffer.data() << endl;
 	}
 }

@@ -111,6 +111,12 @@ bool socket::accept(context* context)
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#else
+	auto client = ::accept(_sock, nullptr, nullptr);
+	if (client == INVALID_SOCKET)
+		return false;
+	context->_socket->set_handle(client);
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -134,6 +140,15 @@ bool socket::connect(context* context)
 
 	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
 		return WSA_IO_PENDING == WSAGetLastError();
+#else
+	ip_address ipAddr = context->ep->get_address();
+
+	if (SOCKET_ERROR == ::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)))
+	{
+		if (errno != EINPROGRESS)
+			return false;
+	}
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -168,6 +183,9 @@ bool socket::disconnect(context* context)
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#else
+	::shutdown(_sock, SHUT_RDWR);
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -202,6 +220,15 @@ bool socket::send(context* context)
 
 	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &wsaBuf.len, 0, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
+#else
+	auto bytes = ::send(_sock, context->_buffer.data(), static_cast<int>(context->length), 0);
+	if (bytes > 0)
+		native::process(context, bytes, true);
+	else
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+			return false;
+	}
 #endif
 
 	return true;

@@ -19,7 +19,7 @@ void endpoint::set_address(ip_address address)
 	_address = address;
 }
 
-u_short endpoint::get_port()
+u_short endpoint::get_port() const
 {
 	return ntohs(_address.sin_port);
 }

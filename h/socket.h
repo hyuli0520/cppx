@@ -32,11 +32,11 @@ namespace cppx
 		socket(protocol pt);
 		virtual ~socket();
 
-		bool not_invalid();
+		bool not_invalid() const;
 		SOCKET get_handle() const;
 		void set_handle(SOCKET sock);
 
-		shared_ptr<endpoint> get_endpoint();
+		shared_ptr<endpoint> get_endpoint() const;
 		void set_endpoint(endpoint ep);
 
 		void close();
@@ -52,21 +52,21 @@ namespace cppx
 		bool disconnect(context* context);
 		bool disconnect();
 		bool send(context* context);
-		bool send(vector<char> msg);
+		bool send(vector<char> msg) const;
 		bool recv(context* context);
-		int recv(vector<char>& msg);
-		int recv(char* buf, size_t len);
+		int recv(vector<char>& msg) const;
+		int recv(char* buf, size_t len) const;
 
 		bool set_linger(short onoff, short linger);
-		bool set_reuse_address(bool flag);
-		bool set_recv_buffer(int size);
-		bool set_send_buffer(int size);
-		bool set_tcp_nodelay(bool flag);
-		bool set_update_accept(socket listen_sock);
+		bool set_reuse_address(bool flag) const;
+		bool set_recv_buffer(int size) const;
+		bool set_send_buffer(int size) const;
+		bool set_tcp_nodelay(bool flag) const;
+		bool set_update_accept(socket listen_sock) const;
 
 
 		template<typename t>
-		bool set_option(int level, int opt_name, t opt_val)
+		bool set_option(int level, int opt_name, t opt_val) const
 		{
 			if (_sock == INVALID_SOCKET)
 				return false;

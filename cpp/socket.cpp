@@ -23,7 +23,7 @@ socket::~socket()
 	close();
 }
 
-bool socket::not_invalid()
+bool socket::not_invalid() const
 {
 	return INVALID_SOCKET != _sock;
 }
@@ -38,7 +38,7 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
-shared_ptr<endpoint> socket::get_endpoint()
+shared_ptr<endpoint> socket::get_endpoint() const
 {
 	return _endpoint;
 }
@@ -104,7 +104,7 @@ bool socket::accept(context* context)
 
 #ifdef _WIN32
 	DWORD dwBytes;
-	char buf[1024];
+	char buf[1024]{};
 
 	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
@@ -214,7 +214,7 @@ bool socket::send(context* context)
 	context->_io_type = io_type::send;
 
 #ifdef _WIN32
-	WSABUF wsaBuf;
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
@@ -234,7 +234,7 @@ bool socket::send(context* context)
 	return true;
 }
 
-bool socket::send(vector<char> msg)
+bool socket::send(vector<char> msg) const
 {
 	return SOCKET_ERROR != ::send(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
@@ -251,7 +251,7 @@ bool socket::recv(context* context)
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
 
-	WSABUF wsaBuf;
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
@@ -279,13 +279,12 @@ bool socket::recv(context* context)
 #endif
 }
 
-int socket::recv(vector<char>& msg)
+int socket::recv(vector<char>& msg) const
 {
-	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
-	return result;
+	return ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
 
-int cppx::socket::recv(char* buf, size_t len)
+int cppx::socket::recv(char* buf, size_t len) const
 {
 	return ::recv(_sock, buf, static_cast<int>(len), 0);
 }
@@ -293,7 +292,7 @@ int cppx::socket::recv(char* buf, size_t len)
 bool socket::set_linger(short onoff, short linger)
 {
 #ifdef _WIN32
-	LINGER option;
+	LINGER option{};
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #else
@@ -304,29 +303,29 @@ bool socket::set_linger(short onoff, short linger)
 	return set_option(SOL_SOCKET, SO_LINGER, option);
 }
 
-bool socket::set_reuse_address(bool flag)
+bool socket::set_reuse_address(bool flag) const
 {
 	return set_option(SOL_SOCKET, SO_REUSEADDR, flag);
 }
 
-bool socket::set_recv_buffer(int size)
+bool socket::set_recv_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_RCVBUF, size);
 }
 
-bool socket::set_send_buffer(int size)
+bool socket::set_send_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_SNDBUF, size);
 }
 
-bool socket::set_tcp_nodelay(bool flag)
+bool socket::set_tcp_nodelay(bool flag) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
 #endif
 }
 
-bool socket::set_update_accept(socket listen_sock)
+bool socket::set_update_accept(socket listen_sock) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);

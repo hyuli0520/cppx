@@ -23,7 +23,7 @@ socket::~socket()
 	close();
 }
 
-bool socket::not_invalid()
+bool socket::not_invalid() const
 {
 	return INVALID_SOCKET != _sock;
 }
@@ -38,7 +38,7 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
-shared_ptr<endpoint> socket::get_endpoint()
+shared_ptr<endpoint> socket::get_endpoint() const
 {
 	return _endpoint;
 }
@@ -234,7 +234,7 @@ bool socket::send(context* context)
 	return true;
 }
 
-bool socket::send(vector<char> msg)
+bool socket::send(vector<char> msg) const
 {
 	return SOCKET_ERROR != ::send(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
@@ -279,13 +279,12 @@ bool socket::recv(context* context)
 #endif
 }
 
-int socket::recv(vector<char>& msg)
+int socket::recv(vector<char>& msg) const
 {
-	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
-	return result;
+	return ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
 
-int cppx::socket::recv(char* buf, size_t len)
+int cppx::socket::recv(char* buf, size_t len) const
 {
 	return ::recv(_sock, buf, static_cast<int>(len), 0);
 }
@@ -304,29 +303,29 @@ bool socket::set_linger(short onoff, short linger)
 	return set_option(SOL_SOCKET, SO_LINGER, option);
 }
 
-bool socket::set_reuse_address(bool flag)
+bool socket::set_reuse_address(bool flag) const
 {
 	return set_option(SOL_SOCKET, SO_REUSEADDR, flag);
 }
 
-bool socket::set_recv_buffer(int size)
+bool socket::set_recv_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_RCVBUF, size);
 }
 
-bool socket::set_send_buffer(int size)
+bool socket::set_send_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_SNDBUF, size);
 }
 
-bool socket::set_tcp_nodelay(bool flag)
+bool socket::set_tcp_nodelay(bool flag) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
 #endif
 }
 
-bool socket::set_update_accept(socket listen_sock)
+bool socket::set_update_accept(socket listen_sock) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);

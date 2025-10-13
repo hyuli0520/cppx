@@ -104,7 +104,7 @@ bool socket::accept(context* context)
 
 #ifdef _WIN32
 	DWORD dwBytes;
-	char buf[1024];
+	char buf[1024]{};
 
 	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
@@ -214,7 +214,7 @@ bool socket::send(context* context)
 	context->_io_type = io_type::send;
 
 #ifdef _WIN32
-	WSABUF wsaBuf;
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
@@ -251,7 +251,7 @@ bool socket::recv(context* context)
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
 
-	WSABUF wsaBuf;
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
@@ -293,7 +293,7 @@ int cppx::socket::recv(char* buf, size_t len)
 bool socket::set_linger(short onoff, short linger)
 {
 #ifdef _WIN32
-	LINGER option;
+	LINGER option{};
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #else

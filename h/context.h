@@ -18,9 +18,9 @@ namespace cppx
 	};
 
 	class context
-	#ifdef _WIN32
+#ifdef _WIN32
 		: public OVERLAPPED
-	#endif
+#endif
 	{
 		using callback = std::function<void(context*, bool)>;
 	public:

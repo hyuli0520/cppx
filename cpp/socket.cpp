@@ -23,7 +23,7 @@ socket::~socket()
 	close();
 }
 
-bool socket::not_invalid()
+bool socket::not_invalid() const
 {
 	return INVALID_SOCKET != _sock;
 }
@@ -38,7 +38,7 @@ void socket::set_handle(SOCKET sock)
 	_sock = sock;
 }
 
-shared_ptr<endpoint> socket::get_endpoint()
+shared_ptr<endpoint> socket::get_endpoint() const
 {
 	return _endpoint;
 }
@@ -52,11 +52,11 @@ void socket::close()
 {
 	if (_sock != INVALID_SOCKET)
 	{
-	#ifdef _WIN32
+#ifdef _WIN32
 		closesocket(_sock);
-	#else
+#else
 		::close(_sock);
-	#endif
+#endif
 		_sock = INVALID_SOCKET;
 	}
 }
@@ -104,13 +104,19 @@ bool socket::accept(context* context)
 
 #ifdef _WIN32
 	DWORD dwBytes;
-	char buf[1024];
+	char buf[1024]{};
 
 	if (!native::accept(_sock, context->_socket->get_handle(), buf, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, context))
 	{
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#else
+	auto client = ::accept(_sock, nullptr, nullptr);
+	if (client == INVALID_SOCKET)
+		return false;
+	context->_socket->set_handle(client);
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -134,6 +140,15 @@ bool socket::connect(context* context)
 
 	if (!native::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in), nullptr, NULL, &dwBytes, context))
 		return WSA_IO_PENDING == WSAGetLastError();
+#else
+	ip_address ipAddr = context->ep->get_address();
+
+	if (SOCKET_ERROR == ::connect(_sock, reinterpret_cast<sockaddr*>(&ipAddr), sizeof(sockaddr_in)))
+	{
+		if (errno != EINPROGRESS)
+			return false;
+	}
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -168,6 +183,9 @@ bool socket::disconnect(context* context)
 		const auto error = WSAGetLastError();
 		return error == WSA_IO_PENDING;
 	}
+#else
+	::shutdown(_sock, SHUT_RDWR);
+	native::process(context, 0, true);
 #endif
 
 	return true;
@@ -196,18 +214,27 @@ bool socket::send(context* context)
 	context->_io_type = io_type::send;
 
 #ifdef _WIN32
-	WSABUF wsaBuf;
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	if (SOCKET_ERROR == ::WSASend(_sock, &wsaBuf, 1, &wsaBuf.len, 0, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
+#else
+	auto bytes = ::send(_sock, context->_buffer.data(), static_cast<int>(context->length), 0);
+	if (bytes > 0)
+		native::process(context, bytes, true);
+	else
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+			return false;
+	}
 #endif
 
 	return true;
 }
 
-bool socket::send(vector<char> msg)
+bool socket::send(vector<char> msg) const
 {
 	return SOCKET_ERROR != ::send(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
@@ -223,25 +250,41 @@ bool socket::recv(context* context)
 #ifdef _WIN32
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
-	
-	WSABUF wsaBuf;
+
+	WSABUF wsaBuf{};
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
 
 	if (SOCKET_ERROR == ::WSARecv(_sock, &wsaBuf, 1, &numOfBytes, &flag, context, nullptr))
 		return WSA_IO_PENDING == WSAGetLastError();
-#endif
 
 	return true;
+#else
+	auto bytes = ::recv(_sock, context->_buffer.data(), static_cast<int>(context->length), 0);
+	if (bytes > 0)
+	{
+		context->length = static_cast<unsigned long>(bytes);
+		native::process(context, bytes, true);
+	}
+	else
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+		{
+			perror("recv error");
+			return false;
+		}
+	}
+
+	return bytes;
+#endif
 }
 
-int socket::recv(vector<char>& msg)
+int socket::recv(vector<char>& msg) const
 {
-	auto result = ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
-	return result;
+	return ::recv(_sock, msg.data(), static_cast<int>(msg.size()), 0);
 }
 
-int cppx::socket::recv(char* buf, size_t len)
+int cppx::socket::recv(char* buf, size_t len) const
 {
 	return ::recv(_sock, buf, static_cast<int>(len), 0);
 }
@@ -249,40 +292,40 @@ int cppx::socket::recv(char* buf, size_t len)
 bool socket::set_linger(short onoff, short linger)
 {
 #ifdef _WIN32
-	LINGER option;	
+	LINGER option{};
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #else
-	struct linger option{};
+	struct linger option {};
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #endif
 	return set_option(SOL_SOCKET, SO_LINGER, option);
 }
 
-bool socket::set_reuse_address(bool flag)
+bool socket::set_reuse_address(bool flag) const
 {
 	return set_option(SOL_SOCKET, SO_REUSEADDR, flag);
 }
 
-bool socket::set_recv_buffer(int size)
+bool socket::set_recv_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_RCVBUF, size);
 }
 
-bool socket::set_send_buffer(int size)
+bool socket::set_send_buffer(int size) const
 {
 	return set_option(SOL_SOCKET, SO_SNDBUF, size);
 }
 
-bool socket::set_tcp_nodelay(bool flag)
+bool socket::set_tcp_nodelay(bool flag) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, TCP_NODELAY, flag);
 #endif
 }
 
-bool socket::set_update_accept(socket listen_sock)
+bool socket::set_update_accept(socket listen_sock) const
 {
 #ifdef _WIN32
 	return set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_sock);

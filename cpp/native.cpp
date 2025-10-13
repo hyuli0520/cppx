@@ -30,7 +30,7 @@ int native::make_non_blocking(int fd)
 		perror("fcntl");
 		return -1;
 	}
-	
+
 	return 0;
 }
 
@@ -68,7 +68,7 @@ bool native::init(int num)
 		close(_epfd);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	ev.events = EPOLLIN | EPOLLET;
 	ev.data.fd = STDIN_FILENO;
 #endif
@@ -112,9 +112,9 @@ void native::gqcs()
 #endif
 	while (true)
 	{
-	#ifdef _WIN32
+#ifdef _WIN32
 		auto result = ::GetQueuedCompletionStatus(_cp, &numofBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&context), INFINITE);
-		
+
 		if (result)
 		{
 			process(context, numofBytes, true);
@@ -124,22 +124,22 @@ void native::gqcs()
 			auto error = WSAGetLastError();
 			switch (error)
 			{
-				case WAIT_TIMEOUT:
+			case WAIT_TIMEOUT:
 				return;
-				default:
+			default:
 				process(context, numofBytes, false);
 				break;
 			}
 		}
-	#else
+#else
 		int nfds = epoll_wait(_epfd, evlist, 256, -1);
 		if (nfds == -1)
 		{
 			perror("epoll_wait");
 			continue;
 		}
-		
-		for (int i = 0; i < nfds; i++) 
+
+		for (int i = 0; i < nfds; i++)
 		{
 			auto ctx = reinterpret_cast<context*>(evlist[i].data.ptr);
 			if (ctx != nullptr)
@@ -153,7 +153,7 @@ void native::gqcs()
 				break;
 			}
 		}
-	#endif
+#endif
 	}
 }
 
@@ -165,16 +165,16 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 		if (success)
 		{
 			auto listen_socket = context->_socket.get();
-		#ifdef _WIN32
+#ifdef _WIN32
 			if (!observe(context->_socket.get()))
 				return false;
 
 			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listen_socket->get_handle()))
 				return false;
-		#else
+#else
 			context->_socket->close();
 			context->_socket->set_handle(static_cast<SOCKET>(numofBytes));
-		#endif
+#endif
 			sockaddr_in addr;
 			socklen_t len = sizeof(sockaddr_in);
 			if (::getpeername(context->_socket->get_handle(), reinterpret_cast<sockaddr*>(&addr), &len) == SOCKET_ERROR)
@@ -187,10 +187,10 @@ bool native::process(context* context, unsigned long numofBytes, bool success)
 	case io_type::connect:
 		if (success)
 		{
-		#ifdef _WIN32
+#ifdef _WIN32
 			if (!context->_socket->set_option(SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, nullptr))
 				return false;
-		#endif
+#endif
 		}
 		context->completed_callback(context, success);
 		break;

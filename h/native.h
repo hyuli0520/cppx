@@ -36,38 +36,38 @@ namespace cppx
 	class native
 	{
 	public:
-	#ifdef _WIN32
+#ifdef _WIN32
 		static LPFN_ACCEPTEX accept;
 		static LPFN_CONNECTEX connect;
 		static LPFN_DISCONNECTEX disconnect;
-	#endif
+#endif
 
 	public:
 		static bool init(int num);
-	#ifdef _WIN32
+#ifdef _WIN32
 		static bool bind_windows_function(SOCKET sock, GUID guid, LPVOID* fn);
-	#else
+#else
 		static int make_non_blocking(int fd);
-	#endif
+#endif
 		static void start_io(int num);
 
 		static bool observe(socket* sock);
 		static void gqcs();
 		static bool process(context* context, unsigned long numofBytes, bool success);
 
-	#ifdef _WIN32
+#ifdef _WIN32
 		static HANDLE get_handle();
-	#else
+#else
 		static int get_handle();
-	#endif
+#endif
 
 	private:
-	#ifdef _WIN32
+#ifdef _WIN32
 		static HANDLE _cp;
-	#else
+#else
 		static int _epfd;
 		static struct epoll_event ev;
 		static struct epoll_event evlist[256];
-	#endif
+#endif
 	};
 }

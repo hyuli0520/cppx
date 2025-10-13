@@ -10,9 +10,9 @@ string dns::get_host_name()
 	return buf;
 }
 
-host_entry dns::get_host_entry(const string &host)
+host_entry dns::get_host_entry(const string& host)
 {
-	struct addrinfo hints {}, *res = nullptr;
+	struct addrinfo hints {}, * res = nullptr;
 	host_entry entry;
 
 	int status = getaddrinfo(host.c_str(), nullptr, &hints, &res);

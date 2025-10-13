@@ -52,11 +52,11 @@ void socket::close()
 {
 	if (_sock != INVALID_SOCKET)
 	{
-	#ifdef _WIN32
+#ifdef _WIN32
 		closesocket(_sock);
-	#else
+#else
 		::close(_sock);
-	#endif
+#endif
 		_sock = INVALID_SOCKET;
 	}
 }
@@ -250,7 +250,7 @@ bool socket::recv(context* context)
 #ifdef _WIN32
 	DWORD flag = 0;
 	DWORD numOfBytes = 0;
-	
+
 	WSABUF wsaBuf;
 	wsaBuf.len = static_cast<ULONG>(context->_buffer.size());
 	wsaBuf.buf = context->_buffer.data();
@@ -266,14 +266,14 @@ bool socket::recv(context* context)
 		context->length = static_cast<unsigned long>(bytes);
 		native::process(context, bytes, true);
 	}
-    else
-    {
-        if (errno != EAGAIN && errno != EWOULDBLOCK)
-        {
-            perror("recv error");
-            return false;
-        }
-    }
+	else
+	{
+		if (errno != EAGAIN && errno != EWOULDBLOCK)
+		{
+			perror("recv error");
+			return false;
+		}
+	}
 
 	return bytes;
 #endif
@@ -293,11 +293,11 @@ int cppx::socket::recv(char* buf, size_t len)
 bool socket::set_linger(short onoff, short linger)
 {
 #ifdef _WIN32
-	LINGER option;	
+	LINGER option;
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #else
-	struct linger option{};
+	struct linger option {};
 	option.l_onoff = onoff;
 	option.l_linger = linger;
 #endif

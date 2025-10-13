@@ -24,8 +24,8 @@ int main()
 		context context;
 		context._buffer = vector<char>(buf, buf + 100);
 		int receive = client.recv(&context);
-// 	vector<char> msg(100, 0);
-// 	int receive = client.recv(msg);
+		// 	vector<char> msg(100, 0);
+		// 	int receive = client.recv(msg);
 		cout << "connected" << endl;
 		cout << "receive bytes : " << receive << endl;
 		cout << "recv : " << context._buffer.data() << endl;

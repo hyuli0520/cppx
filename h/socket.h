@@ -71,7 +71,7 @@ namespace cppx
 			if (_sock == INVALID_SOCKET)
 				return false;
 			return SOCKET_ERROR != setsockopt(_sock, level, opt_name, reinterpret_cast<char*>(&opt_val), sizeof(t));
-		};
+		}
 
 	private:
 		shared_ptr<endpoint> _endpoint;

@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.20)
+project(cppx VERSION 0.1 DESCRIPTION "C++ Network library" LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ------------------------
+# source file
+# ------------------------
+set(SOURCES
+    cpp/context.cpp
+    cpp/dns.cpp
+    cpp/endpoint.cpp
+    cpp/ip_address.cpp
+    cpp/native.cpp
+    cpp/socket.cpp
+    test/main.cpp
+)
+
+add_executable(cppx ${SOURCES})
+
+# ------------------------
+# include path
+# ------------------------
+target_include_directories(cppx PRIVATE
+    ${PROJECT_SOURCE_DIR}/h
+)
+
+# ------------------------
+# common compile option
+# ------------------------
+if(MSVC)
+    target_compile_options(cppx PRIVATE /W3)
+else()
+    target_compile_options(cppx PRIVATE -Wall -Wextra -Wpedantic)
+endif()
